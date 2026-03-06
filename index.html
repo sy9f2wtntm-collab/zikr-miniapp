@@ -1328,9 +1328,12 @@ function bindZikrRows() {
   appEl.querySelectorAll('.zikr-row').forEach((button) => {
     button.addEventListener('click', () => {
       const zikr = getZikrById(button.dataset.zikrId);
-      state.zikrId = zikr.id;
-      state.screen = 'detail';
-      render();
+
+openScreenAtTop(() => {
+  state.zikrId = zikr.id;
+  state.screen = 'detail';
+  render();
+});
     });
   });
 
@@ -1375,13 +1378,49 @@ function bindDetailActions() {
     });
 
     saveData();
-    state.screen = 'mine';
-    state.zikrId = null;
-    render();
+    openScreenAtTop(() => {
+  state.screen = 'mine';
+  state.zikrId = null;
+  render();
+});ƒ
   });
 }
 </script>
+...
+  });
+}
 
+function openScreenAtTop(callback) {
+  if (typeof callback === "function") {
+    callback();
+  }
+
+  const goTop = () => {
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+
+    document.querySelectorAll("*").forEach((el) => {
+      const s = getComputedStyle(el);
+      const canScroll =
+        (/(auto|scroll)/.test(s.overflowY) || /(auto|scroll)/.test(s.overflow)) &&
+        el.scrollHeight > el.clientHeight;
+
+      if (canScroll) {
+        el.scrollTop = 0;
+        el.scrollLeft = 0;
+      }
+    });
+  };
+
+  goTop();
+  requestAnimationFrame(goTop);
+  setTimeout(goTop, 0);
+  setTimeout(goTop, 80);
+  setTimeout(goTop, 200);
+}
+
+</script>
 
 <script>
   const tg = window.Telegram.WebApp;
