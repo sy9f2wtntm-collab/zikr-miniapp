@@ -1,0 +1,1379 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Мои зикры / Сегодня — preview v7</title>
+<meta name="theme-color" content="#edf1f6" />
+<style>
+:root {
+  --bg: #edf1f6;
+  --card: #ffffff;
+  --text: #17171f;
+  --muted: #6f7481;
+  --primary: #4a93d2;
+  --primary-soft: #dfeefd;
+  --line: #dde3ea;
+  --success: #1ea76b;
+  --danger: #c24848;
+  --shadow: 0 10px 24px rgba(13, 24, 42, 0.06);
+  --radius-xl: 28px;
+  --radius-lg: 22px;
+  --radius-md: 16px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: transparent;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+}
+
+.app-shell {
+  width: min(100%, 480px);
+  min-height: 100vh;
+  padding: 18px 16px 92px;
+}
+
+.topbar {
+  display: grid;
+  grid-template-columns: 56px 1fr 56px;
+  gap: 10px;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: 10px 0 14px;
+  background: linear-gradient(to bottom, var(--bg) 78%, rgba(237, 241, 246, 0));
+}
+
+.search-pill {
+  min-height: 56px;
+  border-radius: 999px;
+  padding: 0 22px;
+  display: flex;
+  align-items: center;
+  font-size: 21px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.66);
+  backdrop-filter: blur(8px);
+}
+
+.icon-button {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.66);
+  box-shadow: var(--shadow);
+  font-size: 26px;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card {
+  background: var(--card);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow);
+  padding: 22px;
+}
+
+.hero-card {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.hero-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.hero-top h2 {
+  margin: 4px 0 0;
+  font-size: 30px;
+}
+
+.hero-chip {
+  background: var(--primary-soft);
+  color: var(--primary);
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.hero-stats div {
+  background: #f8fbff;
+  border-radius: 20px;
+  padding: 16px;
+}
+
+.hero-stats strong {
+  display: block;
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+
+.hero-stats span {
+  color: var(--muted);
+}
+
+.list-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 18px;
+  border-radius: var(--radius-lg);
+  background: var(--card);
+  box-shadow: var(--shadow);
+  text-align: left;
+}
+
+.list-row-title {
+  font-size: 19px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.substat {
+  margin-top: 6px;
+  color: var(--primary);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.count-badge,
+.status-badge {
+  min-width: 42px;
+  height: 42px;
+  padding: 0 12px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.count-badge {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.status-badge.done {
+  background: rgba(30, 167, 107, 0.14);
+  color: var(--success);
+}
+
+.counter-card {
+  padding-top: 26px;
+  text-align: center;
+}
+
+.detail-header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.detail-header h2 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.arabic {
+  direction: rtl;
+  text-align: center;
+  font-size: 30px;
+  line-height: 1.9;
+  margin: 6px 0 0;
+}
+
+.transliteration,
+.translation {
+  color: var(--muted);
+  line-height: 1.7;
+  font-size: 17px;
+}
+
+.counter-wrap {
+  display: grid;
+  place-items: center;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.counter-circle {
+  width: 190px;
+  height: 190px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 72px;
+  font-weight: 800;
+  color: white;
+  background: var(--primary);
+  box-shadow: 0 18px 36px rgba(74, 147, 210, 0.25);
+}
+
+.counter-target {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.counter-actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.primary-button,
+.secondary-button,
+.ghost-button,
+.danger-button {
+  min-height: 52px;
+  padding: 0 20px;
+  border-radius: 16px;
+  font-weight: 700;
+}
+
+.primary-button {
+  background: var(--primary);
+  color: white;
+}
+
+.secondary-button {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.ghost-button {
+  background: rgba(23, 23, 31, 0.06);
+  color: var(--text);
+}
+
+.danger-button {
+  background: rgba(194, 72, 72, 0.1);
+  color: var(--danger);
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.metric-value {
+  font-size: 26px;
+  font-weight: 800;
+  margin-top: 6px;
+}
+
+.success-text {
+  color: var(--success);
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.stat-box {
+  background: var(--card);
+  box-shadow: var(--shadow);
+  border-radius: 22px;
+  padding: 18px;
+}
+
+.stat-box strong {
+  display: block;
+  font-size: 26px;
+  margin-bottom: 6px;
+}
+
+.calendar-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.calendar-nav {
+  display: flex;
+  gap: 8px;
+}
+
+.month-switch {
+  min-height: 42px;
+  padding: 0 14px;
+}
+
+.mini-stats-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.mini-stat {
+  background: #f7f9fc;
+  border-radius: 999px;
+  padding: 10px 14px;
+  color: var(--muted);
+}
+
+.calendar-weekdays,
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.calendar-weekdays {
+  margin-bottom: 8px;
+}
+
+.weekday-cell {
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.calendar-cell {
+  min-height: 68px;
+  border-radius: 18px;
+  padding: 10px 6px;
+  background: #f8fafc;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.calendar-cell.empty {
+  background: transparent;
+  box-shadow: none;
+}
+
+.calendar-cell.today {
+  outline: 2px solid rgba(74, 147, 210, 0.22);
+}
+
+.calendar-cell.active {
+  background: #eef6ff;
+}
+
+.calendar-cell.done {
+  background: rgba(30, 167, 107, 0.12);
+}
+
+.calendar-day {
+  font-weight: 800;
+}
+
+.calendar-mark {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.summary-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.summary-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.summary-title {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.summary-value {
+  min-width: 58px;
+  text-align: right;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(calc(100% - 24px), 452px);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  padding: 10px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow);
+}
+
+.nav-btn {
+  min-height: 50px;
+  border-radius: 16px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.nav-btn.active {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.modal {
+  width: min(100% - 24px, 520px);
+  border: none;
+  padding: 0;
+  border-radius: 28px;
+  background: transparent;
+}
+
+.modal::backdrop {
+  background: rgba(12, 19, 28, 0.4);
+}
+
+.modal-card {
+  padding: 22px;
+  background: white;
+  border-radius: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.modal-head h3 {
+  margin: 0;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-weight: 600;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 14px 16px;
+  background: #f8fafc;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 32px 22px;
+}
+
+.empty-state h3 {
+  margin: 0 0 8px;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.row-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 390px) {
+  .search-pill {
+    font-size: 18px;
+  }
+
+  .hero-top {
+    flex-direction: column;
+  }
+
+  .hero-stats,
+  .grid-2,
+  .stat-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .counter-circle {
+    width: 164px;
+    height: 164px;
+    font-size: 62px;
+  }
+
+  .arabic {
+    font-size: 26px;
+  }
+
+  .calendar-cell {
+    min-height: 58px;
+    padding: 8px 4px;
+  }
+
+  .calendar-mark {
+    font-size: 12px;
+  }
+}
+</style>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head><body>
+    <div class="app-shell">
+      <header class="topbar">
+        <button id="backButton" class="icon-button hidden" aria-label="Назад">←</button>
+        <div class="search-pill" id="screenTitle">Мои зикры</div>
+        <button id="addQuickButton" class="icon-button" aria-label="Добавить">＋</button>
+      </header>
+
+      <main id="app"></main>
+
+      <nav class="bottom-nav">
+        <button class="nav-btn active" data-tab="mine">Мои зикры</button>
+        <button class="nav-btn" data-tab="today">Сегодня</button>
+      </nav>
+    </div>
+
+    <dialog id="zikrDialog" class="modal">
+      <form id="zikrForm" class="modal-card">
+        <div class="modal-head">
+          <h3 id="dialogTitle">Добавить зикр</h3>
+          <button type="button" id="closeDialog" class="ghost-button">✕</button>
+        </div>
+
+        <input name="id" type="hidden" />
+
+        <label>
+          Подпись / заметка
+          <input name="title" type="text" placeholder="Например: Утренний зикр или короткая заметка" />
+        </label>
+
+        <label>
+          Арабский текст
+          <textarea name="arabic" rows="4" placeholder="Текст на арабском"></textarea>
+        </label>
+
+        <label>
+          Транскрипция
+          <textarea name="transliteration" rows="3" placeholder="Как читается"></textarea>
+        </label>
+
+        <label>
+          Перевод
+          <textarea name="translation" rows="4" placeholder="Перевод"></textarea>
+        </label>
+
+        <label>
+          Количество повторений в день
+          <input name="target" type="number" min="1" step="1" value="33" required />
+        </label>
+
+        <button type="submit" class="primary-button" id="submitDialogButton">Сохранить</button>
+      </form>
+    </dialog>
+
+<script>
+const tg = window.Telegram?.WebApp;
+if (tg) {
+  tg.ready();
+  tg.expand();
+}
+
+const STORAGE_KEY = 'zikr-miniapp-state-v7';
+
+
+const seedData = {
+  customZikrs: [
+    {
+      id: 'seed-yunus',
+      title: 'Дуа Юнуса',
+      arabic: 'لَا إِلَٰهَ إِلَّا أَنتَ سُبْحَانَكَ إِنِّي كُنتُ مِنَ ٱلظَّٰلِمِينَ',
+      transliteration: 'Ля иляха илля Анта, субханака, инни кунту мина-з-залимин.',
+      translation: 'Нет божества, достойного поклонения, кроме Тебя. Пречист Ты. Воистину, я был из числа беззаконников.',
+      target: 100,
+      source: 'Коран 21:87'
+    },
+    {
+      id: 'seed-istighfar-full',
+      title: 'Истигфар',
+      arabic: 'أَسْتَغْفِرُ ٱللَّهَ وَأَتُوبُ إِلَيْهِ',
+      transliteration: 'Астагфируллаха ва атубу иляйх.',
+      translation: 'Я прошу у Аллаха прощения и каюсь перед Ним.',
+      target: 100,
+      source: 'Hisn al-Muslim 96'
+    },
+    {
+      id: 'seed-hasbiyallah',
+      title: 'Хасбия-Ллаху',
+      arabic: 'حَسْبِيَ ٱللَّهُ لَا إِلَٰهَ إِلَّا هُوَ عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ ٱلْعَرْشِ ٱلْعَظِيمِ',
+      transliteration: 'Хасбия-Ллаху, ля иляха илля Хува, аляйхи таваккальту, ва хува Раббу-ль-‘Арши-ль-‘Азым.',
+      translation: 'Мне достаточно Аллаха. Нет божества, кроме Него. На Него я уповаю, и Он — Господь Великого Трона.',
+      target: 100,
+      source: 'Коран 9:129'
+    },
+    {
+      id: 'seed-la-hawla',
+      title: 'Ля хауля ва ля куввата илля биЛлях',
+      arabic: 'لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِٱللَّهِ',
+      transliteration: 'Ля хауля ва ля куввата илля биЛлях.',
+      translation: 'Нет силы и мощи ни у кого, кроме Аллаха.',
+      target: 100,
+      source: 'Сахих аль-Бухари 6384'
+    },
+    {
+      id: 'seed-la-ilaha-wahdahu',
+      title: 'Ля иляха илля Ллаху вахдаху',
+      arabic: 'لَا إِلَٰهَ إِلَّا ٱللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ ٱلْمُلْكُ وَلَهُ ٱلْحَمْدُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ',
+      transliteration: 'Ля иляха илля Ллаху вахдаху, ля шарика лях, ляху-ль-мульку ва ляху-ль-хамду, ва хува аля кулли шайин кадир.',
+      translation: 'Нет божества, достойного поклонения, кроме одного Аллаха, у Которого нет сотоварища. Ему принадлежит власть и хвала, и Он мощен над всякой вещью.',
+      target: 100,
+      source: 'Сахих аль-Бухари 6403'
+    },
+    {
+      id: 'seed-la-ilaha',
+      title: 'Ля иляха илля Ллах',
+      arabic: 'لَا إِلَٰهَ إِلَّا ٱللَّهُ',
+      transliteration: 'Ля иляха илля Ллах.',
+      translation: 'Нет божества, достойного поклонения, кроме Аллаха.',
+      target: 100,
+      source: 'Формула таухида'
+    },
+    {
+      id: 'seed-salawat',
+      title: 'Аллахумма салли аля Мухаммад',
+      arabic: 'ٱللَّهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ',
+      transliteration: 'Аллахумма салли аля Мухаммад ва аля али Мухаммад.',
+      translation: 'О Аллах, благослови Мухаммада и семейство Мухаммада.',
+      target: 100,
+      source: 'Сахих аль-Бухари 6357'
+    },
+    {
+      id: 'seed-astaghfirullah',
+      title: 'Астагфируллах',
+      arabic: 'أَسْتَغْفِرُ ٱللَّهَ',
+      transliteration: 'Астагфируллах.',
+      translation: 'Я прошу прощения у Аллаха.',
+      target: 100,
+      source: 'Краткий истигфар'
+    },
+    {
+      id: 'seed-la-hawla-aliyy',
+      title: 'Ля хауля ва ля куввата илля биЛляхи-ль-Алиййи-ль-Азым',
+      arabic: 'لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِٱللَّهِ ٱلْعَلِيِّ ٱلْعَظِيمِ',
+      transliteration: 'Ля хауля ва ля куввата илля биЛляхи-ль-‘Алиййи-ль-‘Азым.',
+      translation: 'Нет силы и мощи ни у кого, кроме Аллаха, Возвышенного, Великого.',
+      target: 100,
+      source: 'Hisn al-Muslim 2'
+    },
+    {
+      id: 'seed-rabbi-inni',
+      title: 'Рабби инни лима анзальта',
+      arabic: 'رَبِّ إِنِّي لِمَا أَنزَلْتَ إِلَيَّ مِنْ خَيْرٍ فَقِيرٌ',
+      transliteration: 'Рабби инни лима анзальта иляййа мин хайрин факир.',
+      translation: 'Господь мой, поистине я нуждаюсь в любом благе, которое Ты ниспошлёшь мне.',
+      target: 100,
+      source: 'Коран 28:24'
+    }
+  ],
+  progressByDate: {}
+};
+
+
+const state = {
+  screen: 'mine',
+  zikrId: null,
+  calendarOffset: 0,
+  data: loadData()
+};
+
+const appEl = document.getElementById('app');
+const screenTitleEl = document.getElementById('screenTitle');
+const backButtonEl = document.getElementById('backButton');
+const addQuickButtonEl = document.getElementById('addQuickButton');
+const dialogEl = document.getElementById('zikrDialog');
+const closeDialogEl = document.getElementById('closeDialog');
+const zikrFormEl = document.getElementById('zikrForm');
+const dialogTitleEl = document.getElementById('dialogTitle');
+const submitDialogButtonEl = document.getElementById('submitDialogButton');
+
+attachEvents();
+render();
+
+function loadData() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return structuredClone(seedData);
+
+  try {
+    const parsed = JSON.parse(raw);
+    return {
+      customZikrs: Array.isArray(parsed.customZikrs)
+        ? parsed.customZikrs.map((item, index) => ({ ...structuredClone(seedData.customZikrs[index] || {}), ...item }))
+        : structuredClone(seedData.customZikrs),
+      progressByDate: parsed.progressByDate || {}
+    };
+  } catch (_error) {
+    return structuredClone(seedData);
+  }
+}
+
+function saveData() {
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify({
+      customZikrs: state.data.customZikrs,
+      progressByDate: state.data.progressByDate
+    })
+  );
+}
+
+function attachEvents() {
+  backButtonEl.addEventListener('click', handleBack);
+
+  addQuickButtonEl.addEventListener('click', () => {
+    openCreateDialog();
+  });
+
+  closeDialogEl.addEventListener('click', () => {
+    dialogEl.close();
+  });
+
+  dialogEl.addEventListener('click', (event) => {
+    const rect = dialogEl.getBoundingClientRect();
+    const inDialog = rect.top <= event.clientY && event.clientY <= rect.top + rect.height
+      && rect.left <= event.clientX && event.clientX <= rect.left + rect.width;
+    if (!inDialog) dialogEl.close();
+  });
+
+  zikrFormEl.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const formData = new FormData(zikrFormEl);
+    const existingId = String(formData.get('id') || '').trim();
+    const target = Math.max(1, Number(formData.get('target')) || 1);
+
+    const payload = {
+      title: String(formData.get('title') || '').trim(),
+      arabic: String(formData.get('arabic')).trim(),
+      transliteration: String(formData.get('transliteration')).trim(),
+      translation: String(formData.get('translation')).trim(),
+      target
+    };
+
+    if (existingId) {
+      const zikr = getZikrById(existingId);
+      if (zikr) {
+        Object.assign(zikr, payload);
+        Object.values(state.data.progressByDate).forEach((dayProgress) => {
+          if (typeof dayProgress[existingId] !== 'undefined') {
+            dayProgress[existingId] = Math.min(Number(dayProgress[existingId] || 0), target);
+          }
+        });
+      }
+      state.zikrId = existingId;
+    } else {
+      const id = `custom-${Date.now()}`;
+      state.data.customZikrs.unshift({ id, ...payload, isCustom: true });
+      state.zikrId = id;
+    }
+
+    saveData();
+    zikrFormEl.reset();
+    dialogEl.close();
+    state.screen = 'detail';
+    render();
+  });
+
+  document.querySelectorAll('.nav-btn').forEach((button) => {
+    button.addEventListener('click', () => {
+      state.screen = button.dataset.tab;
+      state.zikrId = null;
+      render();
+    });
+  });
+}
+
+function getAllZikrs() {
+  return state.data.customZikrs;
+}
+
+function getZikrById(zikrId) {
+  return getAllZikrs().find((item) => item.id === zikrId);
+}
+
+function getZikrIndex(zikrId) {
+  return getAllZikrs().findIndex((item) => item.id === zikrId);
+}
+
+function getDisplayLabel(zikrId) {
+  const index = getZikrIndex(zikrId);
+  return index >= 0 ? `Зикр ${index + 1}` : 'Зикр';
+}
+
+function getDisplaySubtitle(zikr) {
+  return zikr.title || zikr.transliteration || zikr.translation || '';
+}
+
+function getShortText(value, maxLength = 68) {
+  if (!value) return '';
+  return value.length > maxLength ? `${value.slice(0, maxLength).trim()}…` : value;
+}
+
+function getTodayKey() {
+  return getDateKey(new Date());
+}
+
+function getDateKey(date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+}
+
+function ensureDateProgress(dateKey = getTodayKey()) {
+  if (!state.data.progressByDate[dateKey]) {
+    state.data.progressByDate[dateKey] = {};
+  }
+  return state.data.progressByDate[dateKey];
+}
+
+function getCount(zikrId, dateKey = getTodayKey()) {
+  const dayProgress = state.data.progressByDate[dateKey] || {};
+  return Number(dayProgress[zikrId] || 0);
+}
+
+function setCount(zikrId, count, dateKey = getTodayKey()) {
+  const zikr = getZikrById(zikrId);
+  if (!zikr) return;
+  const safeCount = Math.max(0, Math.min(zikr.target, count));
+  const dayProgress = ensureDateProgress(dateKey);
+  dayProgress[zikrId] = safeCount;
+  saveData();
+}
+
+function getAllTimeCount(zikrId) {
+  return Object.values(state.data.progressByDate).reduce((sum, dayProgress) => {
+    return sum + Number(dayProgress[zikrId] || 0);
+  }, 0);
+}
+
+function getAllTimeTotal() {
+  return getAllZikrs().reduce((sum, zikr) => sum + getAllTimeCount(zikr.id), 0);
+}
+
+function getDayTotal(dateKey = getTodayKey()) {
+  return getAllZikrs().reduce((sum, zikr) => sum + getCount(zikr.id, dateKey), 0);
+}
+
+function getCompletedDaysForZikr(zikrId) {
+  return Object.keys(state.data.progressByDate).filter((dateKey) => isDone(zikrId, dateKey)).length;
+}
+
+function isDone(zikrId, dateKey = getTodayKey()) {
+  const zikr = getZikrById(zikrId);
+  if (!zikr) return false;
+  return getCount(zikrId, dateKey) >= zikr.target;
+}
+
+function incrementZikr(zikrId) {
+  const zikr = getZikrById(zikrId);
+  if (!zikr) return;
+  const nextCount = Math.min(zikr.target, getCount(zikrId) + 1);
+  setCount(zikrId, nextCount);
+
+  if (tg?.HapticFeedback) {
+    tg.HapticFeedback.impactOccurred('light');
+  }
+
+  render();
+}
+
+function decrementZikr(zikrId) {
+  const nextCount = Math.max(0, getCount(zikrId) - 1);
+  setCount(zikrId, nextCount);
+  render();
+}
+
+function resetZikr(zikrId) {
+  setCount(zikrId, 0);
+  render();
+}
+
+function getTodayStats() {
+  const zikrs = getAllZikrs();
+  const completed = zikrs.filter((item) => isDone(item.id)).length;
+  const totalRepeats = getDayTotal();
+  return {
+    total: zikrs.length,
+    completed,
+    totalRepeats,
+    percent: zikrs.length ? Math.round((completed / zikrs.length) * 100) : 0,
+    allDone: zikrs.length > 0 && completed === zikrs.length
+  };
+}
+
+function getDayStats(dateKey) {
+  const zikrs = getAllZikrs();
+  const completed = zikrs.filter((item) => isDone(item.id, dateKey)).length;
+  const totalRepeats = getDayTotal(dateKey);
+  return {
+    total: zikrs.length,
+    completed,
+    totalRepeats,
+    active: totalRepeats > 0,
+    allDone: zikrs.length > 0 && completed === zikrs.length
+  };
+}
+
+function getActiveStreak() {
+  let streak = 0;
+  const date = new Date();
+
+  while (true) {
+    const dateKey = getDateKey(date);
+    if (!getDayStats(dateKey).active) break;
+    streak += 1;
+    date.setDate(date.getDate() - 1);
+  }
+
+  return streak;
+}
+
+function getMonthModel(offset = 0) {
+  const today = new Date();
+  const monthDate = new Date(today.getFullYear(), today.getMonth() + offset, 1);
+  const year = monthDate.getFullYear();
+  const month = monthDate.getMonth();
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  const daysInMonth = lastDay.getDate();
+  const startOffset = (firstDay.getDay() + 6) % 7;
+  const totalCells = Math.ceil((startOffset + daysInMonth) / 7) * 7;
+  const cells = [];
+
+  for (let i = 0; i < totalCells; i += 1) {
+    if (i < startOffset || i >= startOffset + daysInMonth) {
+      cells.push({ empty: true });
+      continue;
+    }
+
+    const dayNumber = i - startOffset + 1;
+    const date = new Date(year, month, dayNumber);
+    const dateKey = getDateKey(date);
+    const stats = getDayStats(dateKey);
+
+    cells.push({
+      empty: false,
+      dateKey,
+      dayNumber,
+      isToday: dateKey === getTodayKey(),
+      ...stats
+    });
+  }
+
+  return {
+    monthLabel: monthDate.toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' }),
+    cells
+  };
+}
+
+function getMonthActivity(offset = 0) {
+  const today = new Date();
+  const date = new Date(today.getFullYear(), today.getMonth() + offset, 1);
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  let activeDays = 0;
+  let doneDays = 0;
+
+  Object.keys(state.data.progressByDate).forEach((dateKey) => {
+    const [y, m] = dateKey.split('-').map(Number);
+    if (y === year && m === month + 1) {
+      const stats = getDayStats(dateKey);
+      if (stats.active) activeDays += 1;
+      if (stats.allDone) doneDays += 1;
+    }
+  });
+
+  return { activeDays, doneDays };
+}
+
+function openCreateDialog() {
+  zikrFormEl.reset();
+  dialogTitleEl.textContent = 'Добавить зикр';
+  submitDialogButtonEl.textContent = 'Сохранить';
+  zikrFormEl.elements.id.value = '';
+  zikrFormEl.elements.target.value = 100;
+  dialogEl.showModal();
+}
+
+function openEditDialog(zikrId) {
+  const zikr = getZikrById(zikrId);
+  if (!zikr) return;
+
+  dialogTitleEl.textContent = 'Редактировать зикр';
+  submitDialogButtonEl.textContent = 'Сохранить изменения';
+  zikrFormEl.elements.id.value = zikr.id;
+  zikrFormEl.elements.title.value = zikr.title || '';
+  zikrFormEl.elements.arabic.value = zikr.arabic || '';
+  zikrFormEl.elements.transliteration.value = zikr.transliteration || '';
+  zikrFormEl.elements.translation.value = zikr.translation || '';
+  zikrFormEl.elements.target.value = zikr.target || 100;
+  dialogEl.showModal();
+}
+
+function handleBack() {
+  if (state.screen === 'detail') {
+    state.screen = 'mine';
+    state.zikrId = null;
+    render();
+  }
+}
+
+function syncNav() {
+  const active = state.screen === 'detail' ? 'mine' : state.screen;
+  document.querySelectorAll('.nav-btn').forEach((button) => {
+    button.classList.toggle('active', button.dataset.tab === active);
+  });
+}
+
+function setHeader(title, showBack = false) {
+  screenTitleEl.textContent = title;
+  backButtonEl.classList.toggle('hidden', !showBack);
+}
+
+function render() {
+  syncNav();
+
+  if (state.screen === 'detail') {
+    const zikr = getZikrById(state.zikrId);
+    setHeader(getDisplayLabel(state.zikrId), true);
+    appEl.innerHTML = renderDetail(state.zikrId);
+    bindDetailActions();
+    return;
+  }
+
+  if (state.screen === 'today') {
+    setHeader('Сегодня');
+    appEl.innerHTML = renderToday();
+    bindTodayActions();
+    return;
+  }
+
+  setHeader('Мои зикры');
+  appEl.innerHTML = renderMine();
+  bindZikrRows();
+}
+
+function renderZikrRow(zikr) {
+  const todayCount = getCount(zikr.id);
+  const allTimeCount = getAllTimeCount(zikr.id);
+  return `
+    <button class="list-row zikr-row" data-zikr-id="${zikr.id}">
+      <div>
+        <div class="list-row-title">${getDisplayLabel(zikr.id)}</div>
+        <div class="muted">Сегодня ${todayCount} / ${zikr.target}</div>
+        <div class="substat">Всего прочитано: ${allTimeCount}</div>
+      </div>
+      ${isDone(zikr.id)
+        ? '<span class="status-badge done">✅</span>'
+        : `<span class="count-badge">${zikr.target}</span>`}
+    </button>
+  `;
+}
+
+function renderMine() {
+  const items = state.data.customZikrs;
+
+  if (!items.length) {
+    return `
+      <section class="screen">
+        <div class="card empty-state">
+          <h3>Пока нет своих зикров</h3>
+          <div class="muted">Можно добавить свои зикры и задать любое количество повторений для каждого.</div>
+          <div style="margin-top: 18px;">
+            <button class="primary-button" id="openCreateFromMine">Добавить свой зикр</button>
+          </div>
+        </div>
+      </section>
+    `;
+  }
+
+  return `
+    <section class="screen">
+      ${items.map((zikr) => renderZikrRow(zikr)).join('')}
+    </section>
+  `;
+}
+
+function renderDetail(zikrId) {
+  const zikr = getZikrById(zikrId);
+  if (!zikr) {
+    return `
+      <section class="screen">
+        <div class="card empty-state">
+          <h3>Зикр не найден</h3>
+        </div>
+      </section>
+    `;
+  }
+
+  const count = getCount(zikr.id);
+  const done = isDone(zikr.id);
+  const allTimeCount = getAllTimeCount(zikr.id);
+  const completedDays = getCompletedDaysForZikr(zikr.id);
+
+  return `
+    <section class="screen">
+      <div class="card detail-header">
+        ${zikr.arabic ? `<div class="arabic">${zikr.arabic}</div>` : ''}
+        ${zikr.transliteration ? `<div class="transliteration">${zikr.transliteration}</div>` : ''}
+        ${zikr.translation ? `<div class="translation">${zikr.translation}</div>` : ''}
+      </div>
+
+      <div class="card counter-card">
+        <div class="counter-wrap">
+          <button class="counter-circle" id="incrementBtn">${count}</button>
+          <div class="counter-target">Сегодняшняя цель: ${zikr.target}</div>
+        </div>
+
+        <div class="counter-actions">
+          <button class="ghost-button" id="resetBtn">Сбросить</button>
+          ${done ? '<button class="primary-button" disabled>Выполнено сегодня ✅</button>' : ''}
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="grid-2">
+          <div>
+            <div class="muted">Сегодня</div>
+            <div class="metric-value">${count} / ${zikr.target}</div>
+          </div>
+          <div>
+            <div class="muted">Всего</div>
+            <div class="metric-value">${allTimeCount}</div>
+          </div>
+          <div>
+            <div class="muted">Дней выполнено</div>
+            <div class="metric-value">${completedDays}</div>
+          </div>
+          <div>
+            <div class="muted">Статус</div>
+            <div class="metric-value ${done ? 'success-text' : ''}">${done ? 'Готово' : 'В процессе'}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row-actions">
+          <button class="secondary-button" id="editZikrBtn">Редактировать</button>
+          <button class="danger-button" id="deleteCustomBtn">Удалить зикр</button>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function renderToday() {
+  const month = getMonthModel(state.calendarOffset);
+  const monthActivity = getMonthActivity(state.calendarOffset);
+  const todayStats = getTodayStats();
+  const weekdays = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+  const zikrs = getAllZikrs();
+
+  return `
+    <section class="screen">
+      <div class="stat-grid">
+        <div class="stat-box">
+          <strong>${todayStats.completed}/${todayStats.total}</strong>
+          <span class="muted">Выполнено сегодня</span>
+        </div>
+        <div class="stat-box">
+          <strong>${todayStats.percent}%</strong>
+          <span class="muted">Прогресс дня</span>
+        </div>
+        <div class="stat-box">
+          <strong>${getActiveStreak()}</strong>
+          <span class="muted">Дней подряд</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="calendar-head">
+          <div>
+            <h3 style="margin:0; text-transform: capitalize;">Дневник привычек</h3>
+            <div class="muted">День закрывается, когда выполнены все добавленные ежедневные зикры.</div>
+          </div>
+          <div class="calendar-nav">
+            <button class="ghost-button month-switch" id="prevMonthBtn">←</button>
+            <button class="ghost-button month-switch" id="nextMonthBtn">→</button>
+          </div>
+        </div>
+
+        <div class="mini-stats-row">
+          <span class="mini-stat">${month.monthLabel}</span>
+          <span class="mini-stat">Активных дней: <strong>${monthActivity.activeDays}</strong></span>
+          <span class="mini-stat">Закрытых дней: <strong>${monthActivity.doneDays}</strong></span>
+        </div>
+
+        <div class="calendar-weekdays">
+          ${weekdays.map((day) => `<div class="weekday-cell">${day}</div>`).join('')}
+        </div>
+
+        <div class="calendar-grid">
+          ${month.cells.map((item) => {
+            if (item.empty) return '<div class="calendar-cell empty"></div>';
+            return `
+              <div class="calendar-cell ${item.isToday ? 'today' : ''} ${item.allDone ? 'done' : ''} ${item.active && !item.allDone ? 'active' : ''}">
+                <div class="calendar-day">${item.dayNumber}</div>
+                <div class="calendar-mark">${item.allDone ? '✅' : item.active ? `${item.totalRepeats}` : '—'}</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="margin-top:0;">Сегодняшний список</h3>
+        <div class="muted" style="margin-bottom:12px;">После достижения нужного количества повторений зикр отмечается выполненным.</div>
+        ${zikrs.length ? `
+          <div class="summary-list">
+            ${zikrs.map((zikr) => `
+              <div class="summary-row">
+                <div>
+                  <div class="summary-title">${getDisplayLabel(zikr.id)}</div>
+                  <div class="muted">Сегодня ${getCount(zikr.id)} / ${zikr.target}</div>
+                </div>
+                <div class="summary-value">${isDone(zikr.id) ? '✅' : getCount(zikr.id)}</div>
+              </div>
+            `).join('')}
+          </div>
+        ` : `
+          <div class="empty-state" style="padding:12px 0 0;">
+            <div class="muted">Сегодняшний список появится после того, как пользователь добавит первый зикр.</div>
+          </div>
+        `}
+      </div>
+
+    </section>
+  `;
+}
+
+function bindZikrRows() {
+  appEl.querySelectorAll('.zikr-row').forEach((button) => {
+    button.addEventListener('click', () => {
+      const zikr = getZikrById(button.dataset.zikrId);
+      state.zikrId = zikr.id;
+      state.screen = 'detail';
+      render();
+    });
+  });
+
+  const openCreateFromMine = document.getElementById('openCreateFromMine');
+  if (openCreateFromMine) {
+    openCreateFromMine.addEventListener('click', openCreateDialog);
+  }
+}
+
+function bindTodayActions() {
+  const prevMonthBtn = document.getElementById('prevMonthBtn');
+  const nextMonthBtn = document.getElementById('nextMonthBtn');
+
+  prevMonthBtn?.addEventListener('click', () => {
+    state.calendarOffset -= 1;
+    render();
+  });
+
+  nextMonthBtn?.addEventListener('click', () => {
+    state.calendarOffset += 1;
+    render();
+  });
+}
+
+function bindDetailActions() {
+  const incrementBtn = document.getElementById('incrementBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const editZikrBtn = document.getElementById('editZikrBtn');
+  const deleteCustomBtn = document.getElementById('deleteCustomBtn');
+
+  incrementBtn?.addEventListener('click', () => incrementZikr(state.zikrId));
+  resetBtn?.addEventListener('click', () => resetZikr(state.zikrId));
+  editZikrBtn?.addEventListener('click', () => openEditDialog(state.zikrId));
+
+  deleteCustomBtn?.addEventListener('click', () => {
+    const confirmed = window.confirm('Удалить этот зикр?');
+    if (!confirmed) return;
+
+    state.data.customZikrs = state.data.customZikrs.filter((item) => item.id !== state.zikrId);
+    Object.values(state.data.progressByDate).forEach((dayProgress) => {
+      delete dayProgress[state.zikrId];
+    });
+
+    saveData();
+    state.screen = 'mine';
+    state.zikrId = null;
+    render();
+  });
+}
+</script>
+</body></html>
