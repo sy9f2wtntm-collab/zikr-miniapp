@@ -1386,9 +1386,18 @@ function bindDetailActions() {
   const tg = window.Telegram.WebApp;
 
   function scrollToTopNow() {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
+  }
+
+  function forceTop() {
+    scrollToTopNow();
+    requestAnimationFrame(scrollToTopNow);
+    setTimeout(scrollToTopNow, 0);
+    setTimeout(scrollToTopNow, 80);
+    setTimeout(scrollToTopNow, 200);
+    setTimeout(scrollToTopNow, 400);
   }
 
   document.addEventListener("DOMContentLoaded", () => {
@@ -1399,9 +1408,18 @@ function bindDetailActions() {
       history.scrollRestoration = "manual";
     }
 
-    scrollToTopNow();
-    setTimeout(scrollToTopNow, 0);
-    setTimeout(scrollToTopNow, 100);
+    forceTop();
+  });
+
+  window.addEventListener("load", forceTop);
+  window.addEventListener("pageshow", forceTop);
+
+  document.addEventListener("click", (e) => {
+    const navTarget = e.target.closest("a, button");
+    if (!navTarget) return;
+
+    setTimeout(forceTop, 0);
+    setTimeout(forceTop, 120);
   });
 
   document.addEventListener("dblclick", (e) => {
