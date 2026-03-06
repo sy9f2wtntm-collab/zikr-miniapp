@@ -2,6 +2,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>Мои зикры / Сегодня — preview v7</title>
 <meta name="theme-color" content="#edf1f6" />
+  <script src="https://telegram.org/js/telegram-web-app.js?60"></script>
 <style>
 :root {
   --bg: #edf1f6;
@@ -1375,5 +1376,13 @@ function bindDetailActions() {
     render();
   });
 }
+</script>
+  <script>
+  const tg = window.Telegram.WebApp;
+
+  document.addEventListener("DOMContentLoaded", () => {
+    tg.ready();
+    tg.expand();
+  });
 </script>
 </body></html>
