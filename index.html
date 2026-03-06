@@ -4,6 +4,7 @@
   <script src="https://telegram.org/js/telegram-web-app.js?60"></script>
 <style>
   html, body {
+    overflow-anchor: none;
   touch-action: manipulation;
   overscroll-behavior: none;
 }
@@ -1380,24 +1381,45 @@ function bindDetailActions() {
   });
 }
 </script>
-  </script>
+
 
 <script>
   const tg = window.Telegram.WebApp;
 
-  function scrollToTopNow() {
-    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
+  function getScrollableElements() {
+    const list = [document.scrollingElement, document.documentElement, document.body];
+
+    document.querySelectorAll("*").forEach((el) => {
+      const s = getComputedStyle(el);
+      const canScroll =
+        (/(auto|scroll)/.test(s.overflowY) || /(auto|scroll)/.test(s.overflow)) &&
+        el.scrollHeight > el.clientHeight;
+
+      if (canScroll) list.push(el);
+    });
+
+    return [...new Set(list.filter(Boolean))];
   }
 
   function forceTop() {
-    scrollToTopNow();
-    requestAnimationFrame(scrollToTopNow);
-    setTimeout(scrollToTopNow, 0);
-    setTimeout(scrollToTopNow, 80);
-    setTimeout(scrollToTopNow, 200);
-    setTimeout(scrollToTopNow, 400);
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+
+    getScrollableElements().forEach((el) => {
+      el.scrollTop = 0;
+      el.scrollLeft = 0;
+    });
+  }
+
+  function forceTopBurst() {
+    forceTop();
+    requestAnimationFrame(forceTop);
+    setTimeout(forceTop, 0);
+    setTimeout(forceTop, 80);
+    setTimeout(forceTop, 200);
+    setTimeout(forceTop, 400);
+    setTimeout(forceTop, 700);
   }
 
   document.addEventListener("DOMContentLoaded", () => {
@@ -1408,18 +1430,31 @@ function bindDetailActions() {
       history.scrollRestoration = "manual";
     }
 
-    forceTop();
+    forceTopBurst();
   });
 
-  window.addEventListener("load", forceTop);
-  window.addEventListener("pageshow", forceTop);
+  window.addEventListener("load", forceTopBurst);
+  window.addEventListener("pageshow", forceTopBurst);
+
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) forceTopBurst();
+  });
+
+  let observerTimer;
+  const observer = new MutationObserver(() => {
+    clearTimeout(observerTimer);
+    observerTimer = setTimeout(forceTopBurst, 0);
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
 
   document.addEventListener("click", (e) => {
-    const navTarget = e.target.closest("a, button");
-    if (!navTarget) return;
-
-    setTimeout(forceTop, 0);
-    setTimeout(forceTop, 120);
+    if (e.target.closest("a, button")) {
+      forceTopBurst();
+    }
   });
 
   document.addEventListener("dblclick", (e) => {
