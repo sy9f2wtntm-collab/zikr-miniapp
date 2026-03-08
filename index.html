@@ -32,6 +32,7 @@
       --primary-soft: #dfeefd;
       --line: #dde3ea;
       --success: #1ea76b;
+      --success-soft: rgba(30, 167, 107, 0.12);
       --danger: #c24848;
       --shadow: 0 10px 24px rgba(13, 24, 42, 0.06);
       --radius-xl: 28px;
@@ -140,6 +141,7 @@
       font-size: 19px;
       font-weight: 700;
       margin-bottom: 6px;
+      color: var(--primary);
     }
 
     .substat {
@@ -188,7 +190,7 @@
 
     .transliteration {
       color: var(--muted);
-      line-height: 1.7;
+      line-height: 1.75;
       font-size: 17px;
       font-weight: 700;
       word-break: break-word;
@@ -196,7 +198,7 @@
 
     .translation {
       color: var(--muted);
-      line-height: 1.7;
+      line-height: 1.75;
       font-size: 17px;
       word-break: break-word;
     }
@@ -212,12 +214,93 @@
       box-shadow: var(--shadow);
       border-radius: 22px;
       padding: 18px;
+      position: relative;
+      overflow: hidden;
+      min-height: 110px;
     }
 
     .stat-box strong {
       display: block;
-      font-size: 26px;
-      margin-bottom: 6px;
+      font-size: 34px;
+      line-height: 1;
+      margin-bottom: 10px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .stat-box span {
+      position: relative;
+      z-index: 2;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.35;
+    }
+
+    .progress-stat {
+      border: 1px solid rgba(30, 167, 107, 0.12);
+    }
+
+    .progress-stat strong {
+      color: var(--success);
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 10px;
+      background: rgba(30, 167, 107, 0.09);
+      border-radius: 999px;
+      margin-top: 12px;
+      overflow: hidden;
+      position: relative;
+      z-index: 2;
+    }
+
+    .progress-fill-green {
+      height: 100%;
+      background: linear-gradient(90deg, #1ea76b 0%, #35c885 100%);
+      border-radius: 999px;
+      width: 0%;
+      transition: width 0.2s ease;
+    }
+
+    .diary-open-btn {
+      width: 100%;
+      text-align: left;
+      background: var(--card);
+      box-shadow: var(--shadow);
+      border-radius: 24px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .diary-open-title {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .diary-open-subtitle {
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 16px;
+      max-width: 280px;
+    }
+
+    .diary-open-icon {
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-weight: 800;
+      flex-shrink: 0;
     }
 
     .calendar-head {
@@ -326,7 +409,7 @@
       transition: opacity 0.18s ease, visibility 0.18s ease, transform 0.18s ease;
     }
 
-    .bottom-nav.hidden-in-detail {
+    .bottom-nav.hidden-in-subscreen {
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
@@ -613,6 +696,10 @@
       #app.with-detail-dock {
         padding-bottom: 280px;
       }
+
+      .diary-open-title {
+        font-size: 24px;
+      }
     }
   </style>
 </head>
@@ -711,7 +798,7 @@
       lastTouchEnd = now;
     }, { passive: false });
 
-    const STORAGE_KEY = "zikr-miniapp-state-v12";
+    const STORAGE_KEY = "zikr-miniapp-state-v13";
 
     const seedData = {
       customZikrs: [
@@ -790,7 +877,7 @@
         {
           id: "seed-rabbi-inni",
           title: "Рабби инни лима анзальта",
-          arabic: "رَبِّ إِنِّي لِمَا أَنزَلْتَ إِلَيَّ مِنْ خَيْرٍ فَقِيرٌ",
+          arabic: "رَبِّ إِنِّي لِمَا أَنزَلْتَ إِلَيْكَ مِنْ خَيْرٍ فَقِيرٌ",
           transliteration: "Рабби инни лима анзальта иляййа мин хайрин факир.",
           translation: "Господь мой, поистине я нуждаюсь в любом благе, которое Ты ниспошлёшь мне.",
           target: 100
@@ -1229,11 +1316,18 @@
         state.zikrId = null;
         render();
         afterRenderTop();
+        return;
+      }
+
+      if (state.screen === "habit") {
+        state.screen = "today";
+        render();
+        afterRenderTop();
       }
     }
 
     function syncNav() {
-      const active = state.screen === "detail" ? "mine" : state.screen;
+      const active = state.screen === "habit" ? "today" : state.screen === "detail" ? "mine" : state.screen;
       document.querySelectorAll(".nav-btn").forEach((button) => {
         button.classList.toggle("active", button.dataset.tab === active);
       });
@@ -1248,9 +1342,11 @@
       syncNav();
 
       const isDetail = state.screen === "detail";
+      const isSubscreen = state.screen === "detail" || state.screen === "habit";
+
       appEl.classList.toggle("with-detail-dock", isDetail);
       detailDockEl.classList.toggle("active", isDetail);
-      bottomNavEl.classList.toggle("hidden-in-detail", isDetail);
+      bottomNavEl.classList.toggle("hidden-in-subscreen", isSubscreen);
 
       if (state.screen === "detail") {
         setHeader(getDisplayLabel(state.zikrId), true);
@@ -1261,6 +1357,13 @@
       }
 
       detailDockEl.innerHTML = "";
+
+      if (state.screen === "habit") {
+        setHeader("Дневник привычек", true);
+        appEl.innerHTML = renderHabitJournal();
+        bindHabitActions();
+        return;
+      }
 
       if (state.screen === "today") {
         setHeader("Сегодня");
@@ -1376,28 +1479,48 @@
     }
 
     function renderToday() {
-      const month = getMonthModel(state.calendarOffset);
-      const monthActivity = getMonthActivity(state.calendarOffset);
       const todayStats = getTodayStats();
-      const weekdays = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
 
       return `
         <section class="screen">
           <div class="stat-grid">
             <div class="stat-box">
               <strong>${todayStats.completed}/${todayStats.total}</strong>
-              <span class="muted">Выполнено сегодня</span>
+              <span>Выполнено сегодня</span>
             </div>
-            <div class="stat-box">
+
+            <div class="stat-box progress-stat">
               <strong>${todayStats.percent}%</strong>
-              <span class="muted">Прогресс дня</span>
+              <span>Прогресс дня</span>
+              <div class="progress-track">
+                <div class="progress-fill-green" style="width:${todayStats.percent}%"></div>
+              </div>
             </div>
+
             <div class="stat-box">
               <strong>${getActiveStreak()}</strong>
-              <span class="muted">Дней подряд</span>
+              <span>Дней подряд</span>
             </div>
           </div>
 
+          <button class="diary-open-btn" id="openHabitJournalBtn">
+            <div>
+              <div class="diary-open-title">Дневник привычек</div>
+              <div class="diary-open-subtitle">Открой календарь активности и посмотри, какие дни были выполнены.</div>
+            </div>
+            <div class="diary-open-icon">→</div>
+          </button>
+        </section>
+      `;
+    }
+
+    function renderHabitJournal() {
+      const month = getMonthModel(state.calendarOffset);
+      const monthActivity = getMonthActivity(state.calendarOffset);
+      const weekdays = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
+
+      return `
+        <section class="screen">
           <div class="card">
             <div class="calendar-head">
               <div>
@@ -1455,6 +1578,16 @@
     }
 
     function bindTodayActions() {
+      const openHabitJournalBtn = document.getElementById("openHabitJournalBtn");
+
+      openHabitJournalBtn?.addEventListener("click", () => {
+        state.screen = "habit";
+        render();
+        afterRenderTop();
+      });
+    }
+
+    function bindHabitActions() {
       const prevMonthBtn = document.getElementById("prevMonthBtn");
       const nextMonthBtn = document.getElementById("nextMonthBtn");
 
