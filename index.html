@@ -99,6 +99,7 @@
       background: rgba(255, 255, 255, 0.66);
       box-shadow: var(--shadow);
       font-size: 26px;
+      flex-shrink: 0;
     }
 
     .hidden {
@@ -106,7 +107,7 @@
     }
 
     #app.with-detail-dock {
-      padding-bottom: 300px;
+      padding-bottom: 250px;
     }
 
     .screen {
@@ -309,7 +310,7 @@
       gap: 10px;
       padding: 10px;
       border-radius: 24px;
-      background: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.82);
       backdrop-filter: blur(10px);
       box-shadow: var(--shadow);
       z-index: 30;
@@ -357,14 +358,16 @@
 
     .tap-panel {
       width: 100%;
+      min-height: 230px;
       border-radius: 24px;
       background: linear-gradient(180deg, #ffffff 0%, #f9fbfe 100%);
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.65);
       padding: 14px 16px 18px;
-      text-align: center;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
     }
 
     .tap-progress {
@@ -384,18 +387,19 @@
     }
 
     .tap-count {
-      font-size: 56px;
+      font-size: 94px;
       line-height: 1;
-      font-weight: 800;
+      font-weight: 500;
       color: var(--text);
       margin-top: 4px;
     }
 
     .tap-progress-text {
-      font-size: 28px;
-      font-weight: 800;
-      color: var(--text);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--muted);
       line-height: 1.15;
+      margin-top: -6px;
     }
 
     .tap-done {
@@ -408,6 +412,7 @@
       font-size: 18px;
       font-weight: 800;
       padding: 0 14px;
+      width: 100%;
     }
 
     .tap-hint {
@@ -416,9 +421,9 @@
       font-weight: 600;
     }
 
-    .tap-controls-3 {
+    .dock-actions {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: 10px;
     }
 
@@ -453,8 +458,9 @@
     }
 
     .dock-btn {
-      min-height: 50px;
-      padding: 0 10px;
+      min-height: 54px;
+      padding: 0 12px;
+      font-size: 18px;
     }
 
     .modal {
@@ -562,15 +568,11 @@
       }
 
       .tap-count {
-        font-size: 52px;
+        font-size: 80px;
       }
 
-      .tap-progress-text {
-        font-size: 24px;
-      }
-
-      .tap-controls-3 {
-        grid-template-columns: 1fr;
+      .tap-panel {
+        min-height: 214px;
       }
     }
   </style>
@@ -670,7 +672,7 @@
       lastTouchEnd = now;
     }, { passive: false });
 
-    const STORAGE_KEY = "zikr-miniapp-state-v9";
+    const STORAGE_KEY = "zikr-miniapp-state-v10";
 
     const seedData = {
       customZikrs: [
@@ -680,8 +682,7 @@
           arabic: "لَا إِلَٰهَ إِلَّا أَنتَ سُبْحَانَكَ إِنِّي كُنتُ مِنَ ٱلظَّٰلِمِينَ",
           transliteration: "Ля иляха илля Анта, субханака, инни кунту мина-з-залимин.",
           translation: "Нет божества, достойного поклонения, кроме Тебя. Пречист Ты. Воистину, я был из числа беззаконников.",
-          target: 100,
-          source: "Коран 21:87"
+          target: 100
         },
         {
           id: "seed-istighfar-full",
@@ -689,8 +690,7 @@
           arabic: "أَسْتَغْفِرُ ٱللَّهَ وَأَتُوبُ إِلَيْهِ",
           transliteration: "Астагфируллаха ва атубу иляйх.",
           translation: "Я прошу у Аллаха прощения и каюсь перед Ним.",
-          target: 100,
-          source: "Hisn al-Muslim 96"
+          target: 100
         },
         {
           id: "seed-hasbiyallah",
@@ -698,8 +698,7 @@
           arabic: "حَسْبِيَ ٱللَّهُ لَا إِلَٰهَ إِلَّا هُوَ عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ ٱلْعَرْشِ ٱلْعَظِيمِ",
           transliteration: "Хасбия-Ллаху, ля иляха илля Хува, аляйхи таваккальту, ва хува Раббу-ль-‘Арши-ль-‘Азым.",
           translation: "Мне достаточно Аллаха. Нет божества, кроме Него. На Него я уповаю, и Он — Господь Великого Трона.",
-          target: 100,
-          source: "Коран 9:129"
+          target: 100
         },
         {
           id: "seed-la-hawla",
@@ -707,8 +706,7 @@
           arabic: "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِٱللَّهِ",
           transliteration: "Ля хауля ва ля куввата илля биЛлях.",
           translation: "Нет силы и мощи ни у кого, кроме Аллаха.",
-          target: 100,
-          source: "Сахих аль-Бухари 6384"
+          target: 100
         },
         {
           id: "seed-la-ilaha-wahdahu",
@@ -716,8 +714,7 @@
           arabic: "لَا إِلَٰهَ إِلَّا ٱللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ ٱلْمُلْكُ وَلَهُ ٱلْحَمْدُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ",
           transliteration: "Ля иляха илля Ллаху вахдаху, ля шарика лях, ляху-ль-мульку ва ляху-ль-хамду, ва хува аля кулли шайин кадир.",
           translation: "Нет божества, достойного поклонения, кроме одного Аллаха, у Которого нет сотоварища. Ему принадлежит власть и хвала, и Он мощен над всякой вещью.",
-          target: 100,
-          source: "Сахих аль-Бухари 6403"
+          target: 100
         },
         {
           id: "seed-la-ilaha",
@@ -725,8 +722,7 @@
           arabic: "لَا إِلَٰهَ إِلَّا ٱللَّهُ",
           transliteration: "Ля иляха илля Ллах.",
           translation: "Нет божества, достойного поклонения, кроме Аллаха.",
-          target: 100,
-          source: "Формула таухида"
+          target: 100
         },
         {
           id: "seed-salawat",
@@ -734,8 +730,7 @@
           arabic: "ٱللَّهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ",
           transliteration: "Аллахумма салли аля Мухаммад ва аля али Мухаммад.",
           translation: "О Аллах, благослови Мухаммада и семейство Мухаммада.",
-          target: 100,
-          source: "Сахих аль-Бухари 6357"
+          target: 100
         },
         {
           id: "seed-astaghfirullah",
@@ -743,8 +738,7 @@
           arabic: "أَسْتَغْفِرُ ٱللَّهَ",
           transliteration: "Астагфируллах.",
           translation: "Я прошу прощения у Аллаха.",
-          target: 100,
-          source: "Краткий истигфар"
+          target: 100
         },
         {
           id: "seed-la-hawla-aliyy",
@@ -752,17 +746,15 @@
           arabic: "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِٱللَّهِ ٱلْعَلِيِّ ٱلْعَظِيمِ",
           transliteration: "Ля хауля ва ля куввата илля биЛляхи-ль-‘Алиййи-ль-‘Азым.",
           translation: "Нет силы и мощи ни у кого, кроме Аллаха, Возвышенного, Великого.",
-          target: 100,
-          source: "Hisn al-Muslim 2"
+          target: 100
         },
         {
           id: "seed-rabbi-inni",
           title: "Рабби инни лима анзальта",
-          arabic: "رَبِّ إِنِّي لِمَا أَنزَلْتَ إِلَيْ مِنْ خَيْرٍ فَقِيرٌ",
+          arabic: "رَبِّ إِنِّي لِمَا أَنزَلْتَ إِلَيَّ مِنْ خَيْرٍ فَقِيرٌ",
           transliteration: "Рабби инни лима анзальта иляййа мин хайрин факир.",
           translation: "Господь мой, поистине я нуждаюсь в любом благе, которое Ты ниспошлёшь мне.",
-          target: 100,
-          source: "Коран 28:24"
+          target: 100
         }
       ],
       progressByDate: {}
@@ -1171,17 +1163,6 @@
       manageDialogEl.showModal();
     }
 
-    function goToNextZikr() {
-      const all = getAllZikrs();
-      if (!all.length || !state.zikrId) return;
-
-      const currentIndex = getZikrIndex(state.zikrId);
-      const nextIndex = currentIndex >= 0 ? (currentIndex + 1) % all.length : 0;
-      state.zikrId = all[nextIndex].id;
-      render();
-      afterRenderTop();
-    }
-
     function handleBack() {
       if (state.screen === "detail") {
         state.screen = "mine";
@@ -1304,7 +1285,6 @@
       const count = getCount(zikr.id);
       const done = isDone(zikr.id);
       const progress = zikr.target ? Math.min(100, Math.round((count / zikr.target) * 100)) : 0;
-      const hasNext = getAllZikrs().length > 1;
 
       return `
         <div class="detail-dock-card">
@@ -1324,10 +1304,8 @@
             <div class="tap-hint">Нажмите в любое место панели</div>
           </button>
 
-          <div class="tap-controls-3">
-            <button class="ghost-button dock-btn" id="resetBtn">Сбросить</button>
+          <div class="dock-actions">
             <button class="secondary-button dock-btn" id="manageBtn">Опции</button>
-            <button class="secondary-button dock-btn" id="nextZikrBtn" ${hasNext ? "" : "disabled"}>Следующий</button>
           </div>
         </div>
       `;
@@ -1431,24 +1409,14 @@
 
     function bindDetailActions() {
       const incrementPanelBtn = document.getElementById("incrementPanelBtn");
-      const resetBtn = document.getElementById("resetBtn");
       const manageBtn = document.getElementById("manageBtn");
-      const nextZikrBtn = document.getElementById("nextZikrBtn");
 
       incrementPanelBtn?.addEventListener("click", () => {
         incrementZikr(state.zikrId);
       });
 
-      resetBtn?.addEventListener("click", () => {
-        resetZikr(state.zikrId);
-      });
-
       manageBtn?.addEventListener("click", () => {
         openManageDialog();
-      });
-
-      nextZikrBtn?.addEventListener("click", () => {
-        goToNextZikr();
       });
     }
 
