@@ -6,7 +6,7 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
   />
-  <title>Мои зикры / Сегодня — preview v7</title>
+  <title>Мои зикры</title>
   <meta name="theme-color" content="#edf1f6" />
   <script src="https://telegram.org/js/telegram-web-app.js?60"></script>
 
@@ -16,6 +16,11 @@
       overflow-anchor: none;
       touch-action: manipulation;
       overscroll-behavior: none;
+      margin: 0;
+      min-height: 100%;
+      background: #edf1f6;
+      color: #17171f;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     :root {
@@ -36,15 +41,7 @@
 
     * {
       box-sizing: border-box;
-    }
-
-    html,
-    body {
-      margin: 0;
-      min-height: 100%;
-      background: var(--bg);
-      color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
 
     button,
@@ -78,7 +75,7 @@
       align-items: center;
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: 20;
       padding: 10px 0 14px;
       background: linear-gradient(to bottom, var(--bg) 78%, rgba(237, 241, 246, 0));
     }
@@ -108,6 +105,10 @@
       visibility: hidden;
     }
 
+    #app.with-detail-dock {
+      padding-bottom: 270px;
+    }
+
     .screen {
       display: flex;
       flex-direction: column;
@@ -121,55 +122,6 @@
       padding: 22px;
     }
 
-    .hero-card {
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-
-    .hero-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      align-items: flex-start;
-    }
-
-    .hero-top h2 {
-      margin: 4px 0 0;
-      font-size: 30px;
-    }
-
-    .hero-chip {
-      background: var(--primary-soft);
-      color: var(--primary);
-      border-radius: 999px;
-      padding: 10px 14px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
-    .hero-stats {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-    }
-
-    .hero-stats div {
-      background: #f8fbff;
-      border-radius: 20px;
-      padding: 16px;
-    }
-
-    .hero-stats strong {
-      display: block;
-      font-size: 28px;
-      margin-bottom: 6px;
-    }
-
-    .hero-stats span {
-      color: var(--muted);
-    }
-
     .list-row {
       display: flex;
       align-items: center;
@@ -180,6 +132,7 @@
       background: var(--card);
       box-shadow: var(--shadow);
       text-align: left;
+      width: 100%;
     }
 
     .list-row-title {
@@ -217,20 +170,10 @@
       color: var(--success);
     }
 
-    .counter-card {
-      padding-top: 26px;
-      text-align: center;
-    }
-
     .detail-header {
       display: flex;
       flex-direction: column;
       gap: 12px;
-    }
-
-    .detail-header h2 {
-      margin: 0;
-      font-size: 28px;
     }
 
     .arabic {
@@ -246,69 +189,6 @@
       color: var(--muted);
       line-height: 1.7;
       font-size: 17px;
-    }
-
-    .counter-wrap {
-      display: grid;
-      place-items: center;
-      gap: 18px;
-      margin-top: 18px;
-    }
-
-    .counter-circle {
-      width: 190px;
-      height: 190px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      font-size: 72px;
-      font-weight: 800;
-      color: white;
-      background: var(--primary);
-      box-shadow: 0 18px 36px rgba(74, 147, 210, 0.25);
-    }
-
-    .counter-target {
-      font-size: 22px;
-      font-weight: 700;
-    }
-
-    .counter-actions {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      margin-top: 10px;
-      flex-wrap: wrap;
-    }
-
-    .primary-button,
-    .secondary-button,
-    .ghost-button,
-    .danger-button {
-      min-height: 52px;
-      padding: 0 20px;
-      border-radius: 16px;
-      font-weight: 700;
-    }
-
-    .primary-button {
-      background: var(--primary);
-      color: white;
-    }
-
-    .secondary-button {
-      background: var(--primary-soft);
-      color: var(--primary);
-    }
-
-    .ghost-button {
-      background: rgba(23, 23, 31, 0.06);
-      color: var(--text);
-    }
-
-    .danger-button {
-      background: rgba(194, 72, 72, 0.1);
-      color: var(--danger);
     }
 
     .grid-2 {
@@ -481,6 +361,7 @@
       background: rgba(255, 255, 255, 0.8);
       backdrop-filter: blur(10px);
       box-shadow: var(--shadow);
+      z-index: 30;
     }
 
     .nav-btn {
@@ -493,6 +374,135 @@
     .nav-btn.active {
       background: var(--primary-soft);
       color: var(--primary);
+    }
+
+    .detail-dock {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 96px;
+      width: min(calc(100% - 24px), 452px);
+      z-index: 25;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease;
+    }
+
+    .detail-dock.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .detail-dock-card {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .tap-panel {
+      width: 100%;
+      border-radius: 24px;
+      background: linear-gradient(180deg, #ffffff 0%, #f9fbfe 100%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.65);
+      padding: 14px 16px 18px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .tap-progress {
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(74, 147, 210, 0.14);
+      overflow: hidden;
+    }
+
+    .tap-progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.18s ease;
+    }
+
+    .tap-count {
+      font-size: 72px;
+      line-height: 1;
+      font-weight: 800;
+      color: var(--text);
+      margin-top: 6px;
+    }
+
+    .tap-progress-text {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.15;
+    }
+
+    .tap-done {
+      min-height: 52px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      background: var(--primary);
+      color: white;
+      font-size: 18px;
+      font-weight: 800;
+      padding: 0 14px;
+    }
+
+    .tap-hint {
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .tap-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .primary-button,
+    .secondary-button,
+    .ghost-button,
+    .danger-button {
+      min-height: 52px;
+      padding: 0 20px;
+      border-radius: 16px;
+      font-weight: 700;
+    }
+
+    .primary-button {
+      background: var(--primary);
+      color: white;
+    }
+
+    .secondary-button {
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
+
+    .ghost-button {
+      background: rgba(23, 23, 31, 0.06);
+      color: var(--text);
+    }
+
+    .danger-button {
+      background: rgba(194, 72, 72, 0.1);
+      color: var(--danger);
+    }
+
+    .dock-btn {
+      min-height: 50px;
     }
 
     .modal {
@@ -557,10 +567,10 @@
       color: var(--muted);
     }
 
-    .row-actions {
+    .manage-actions {
       display: flex;
+      flex-direction: column;
       gap: 10px;
-      flex-wrap: wrap;
     }
 
     @media (max-width: 390px) {
@@ -568,20 +578,9 @@
         font-size: 18px;
       }
 
-      .hero-top {
-        flex-direction: column;
-      }
-
-      .hero-stats,
       .grid-2,
       .stat-grid {
         grid-template-columns: 1fr;
-      }
-
-      .counter-circle {
-        width: 164px;
-        height: 164px;
-        font-size: 62px;
       }
 
       .arabic {
@@ -596,6 +595,14 @@
       .calendar-mark {
         font-size: 12px;
       }
+
+      .tap-count {
+        font-size: 62px;
+      }
+
+      .tap-progress-text {
+        font-size: 24px;
+      }
     }
   </style>
 </head>
@@ -608,6 +615,7 @@
     </header>
 
     <main id="app"></main>
+    <div id="detailDock" class="detail-dock"></div>
 
     <nav class="bottom-nav">
       <button class="nav-btn active" data-tab="mine">Мои зикры</button>
@@ -653,125 +661,184 @@
     </form>
   </dialog>
 
+  <dialog id="manageDialog" class="modal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3>Управление зикром</h3>
+        <button type="button" id="closeManageDialog" class="ghost-button">✕</button>
+      </div>
+
+      <div class="manage-actions">
+        <button type="button" class="secondary-button" id="manageEditBtn">Редактировать</button>
+        <button type="button" class="ghost-button" id="manageResetBtn">Сбросить счётчик</button>
+        <button type="button" class="danger-button" id="manageDeleteBtn">Удалить зикр</button>
+      </div>
+    </div>
+  </dialog>
+
   <script>
     const tg = window.Telegram?.WebApp;
-    const STORAGE_KEY = 'zikr-miniapp-state-v7';
+    if (tg) {
+      tg.ready();
+      tg.expand();
+    }
+
+    document.addEventListener("dblclick", (e) => {
+      e.preventDefault();
+    }, { passive: false });
+
+    let lastTouchEnd = 0;
+    document.addEventListener("touchend", (e) => {
+      const now = Date.now();
+      if (now - lastTouchEnd <= 300) {
+        e.preventDefault();
+      }
+      lastTouchEnd = now;
+    }, { passive: false });
+
+    const STORAGE_KEY = "zikr-miniapp-state-v8";
 
     const seedData = {
       customZikrs: [
         {
-          id: 'seed-yunus',
-          title: 'Дуа Юнуса',
-          arabic: 'لَا إِلَٰهَ إِلَّا أَنتَ سُبْحَانَكَ إِنِّي كُنتُ مِنَ ٱلظَّٰلِمِينَ',
-          transliteration: 'Ля иляха илля Анта, субханака, инни кунту мина-з-залимин.',
-          translation: 'Нет божества, достойного поклонения, кроме Тебя. Пречист Ты. Воистину, я был из числа беззаконников.',
+          id: "seed-yunus",
+          title: "Дуа Юнуса",
+          arabic: "لَا إِلَٰهَ إِلَّا أَنتَ سُبْحَانَكَ إِنِّي كُنتُ مِنَ ٱلظَّٰلِمِينَ",
+          transliteration: "Ля иляха илля Анта, субханака, инни кунту мина-з-залимин.",
+          translation: "Нет божества, достойного поклонения, кроме Тебя. Пречист Ты. Воистину, я был из числа беззаконников.",
           target: 100,
-          source: 'Коран 21:87'
+          source: "Коран 21:87"
         },
         {
-          id: 'seed-istighfar-full',
-          title: 'Истигфар',
-          arabic: 'أَسْتَغْفِرُ ٱللَّهَ وَأَتُوبُ إِلَيْهِ',
-          transliteration: 'Астагфируллаха ва атубу иляйх.',
-          translation: 'Я прошу у Аллаха прощения и каюсь перед Ним.',
+          id: "seed-istighfar-full",
+          title: "Истигфар",
+          arabic: "أَسْتَغْفِرُ ٱللَّهَ وَأَتُوبُ إِلَيْهِ",
+          transliteration: "Астагфируллаха ва атубу иляйх.",
+          translation: "Я прошу у Аллаха прощения и каюсь перед Ним.",
           target: 100,
-          source: 'Hisn al-Muslim 96'
+          source: "Hisn al-Muslim 96"
         },
         {
-          id: 'seed-hasbiyallah',
-          title: 'Хасбия-Ллаху',
-          arabic: 'حَسْبِيَ ٱللَّهُ لَا إِلَٰهَ إِلَّا هُوَ عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ ٱلْعَرْشِ ٱلْعَظِيمِ',
-          transliteration: 'Хасбия-Ллаху, ля иляха илля Хува, аляйхи таваккальту, ва хува Раббу-ль-‘Арши-ль-‘Азым.',
-          translation: 'Мне достаточно Аллаха. Нет божества, кроме Него. На Него я уповаю, и Он — Господь Великого Трона.',
+          id: "seed-hasbiyallah",
+          title: "Хасбия-Ллаху",
+          arabic: "حَسْبِيَ ٱللَّهُ لَا إِلَٰهَ إِلَّا هُوَ عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ ٱلْعَرْشِ ٱلْعَظِيمِ",
+          transliteration: "Хасбия-Ллаху, ля иляха илля Хува, аляйхи таваккальту, ва хува Раббу-ль-‘Арши-ль-‘Азым.",
+          translation: "Мне достаточно Аллаха. Нет божества, кроме Него. На Него я уповаю, и Он — Господь Великого Трона.",
           target: 100,
-          source: 'Коран 9:129'
+          source: "Коран 9:129"
         },
         {
-          id: 'seed-la-hawla',
-          title: 'Ля хауля ва ля куввата илля биЛлях',
-          arabic: 'لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِٱللَّهِ',
-          transliteration: 'Ля хауля ва ля куввата илля биЛлях.',
-          translation: 'Нет силы и мощи ни у кого, кроме Аллаха.',
+          id: "seed-la-hawla",
+          title: "Ля хауля ва ля куввата илля биЛлях",
+          arabic: "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِٱللَّهِ",
+          transliteration: "Ля хауля ва ля куввата илля биЛлях.",
+          translation: "Нет силы и мощи ни у кого, кроме Аллаха.",
           target: 100,
-          source: 'Сахих аль-Бухари 6384'
+          source: "Сахих аль-Бухари 6384"
         },
         {
-          id: 'seed-la-ilaha-wahdahu',
-          title: 'Ля иляха илля Ллаху вахдаху',
-          arabic: 'لَا إِلَٰهَ إِلَّا ٱللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ ٱلْمُلْكُ وَلَهُ ٱلْحَمْدُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ',
-          transliteration: 'Ля иляха илля Ллаху вахдаху, ля шарика лях, ляху-ль-мульку ва ляху-ль-хамду, ва хува аля кулли шайин кадир.',
-          translation: 'Нет божества, достойного поклонения, кроме одного Аллаха, у Которого нет сотоварища. Ему принадлежит власть и хвала, и Он мощен над всякой вещью.',
+          id: "seed-la-ilaha-wahdahu",
+          title: "Ля иляха илля Ллаху вахдаху",
+          arabic: "لَا إِلَٰهَ إِلَّا ٱللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ ٱلْمُلْكُ وَلَهُ ٱلْحَمْدُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ",
+          transliteration: "Ля иляха илля Ллаху вахдаху, ля шарика лях, ляху-ль-мульку ва ляху-ль-хамду, ва хува аля кулли шайин кадир.",
+          translation: "Нет божества, достойного поклонения, кроме одного Аллаха, у Которого нет сотоварища. Ему принадлежит власть и хвала, и Он мощен над всякой вещью.",
           target: 100,
-          source: 'Сахих аль-Бухари 6403'
+          source: "Сахих аль-Бухари 6403"
         },
         {
-          id: 'seed-la-ilaha',
-          title: 'Ля иляха илля Ллах',
-          arabic: 'لَا إِلَٰهَ إِلَّا ٱللَّهُ',
-          transliteration: 'Ля иляха илля Ллах.',
-          translation: 'Нет божества, достойного поклонения, кроме Аллаха.',
+          id: "seed-la-ilaha",
+          title: "Ля иляха илля Ллах",
+          arabic: "لَا إِلَٰهَ إِلَّا ٱللَّهُ",
+          transliteration: "Ля иляха илля Ллах.",
+          translation: "Нет божества, достойного поклонения, кроме Аллаха.",
           target: 100,
-          source: 'Формула таухида'
+          source: "Формула таухида"
         },
         {
-          id: 'seed-salawat',
-          title: 'Аллахумма салли аля Мухаммад',
-          arabic: 'ٱللَّهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ',
-          transliteration: 'Аллахумма салли аля Мухаммад ва аля али Мухаммад.',
-          translation: 'О Аллах, благослови Мухаммада и семейство Мухаммада.',
+          id: "seed-salawat",
+          title: "Аллахумма салли аля Мухаммад",
+          arabic: "ٱللَّهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ",
+          transliteration: "Аллахумма салли аля Мухаммад ва аля али Мухаммад.",
+          translation: "О Аллах, благослови Мухаммада и семейство Мухаммада.",
           target: 100,
-          source: 'Сахих аль-Бухари 6357'
+          source: "Сахих аль-Бухари 6357"
         },
         {
-          id: 'seed-astaghfirullah',
-          title: 'Астагфируллах',
-          arabic: 'أَسْتَغْفِرُ ٱللَّهَ',
-          transliteration: 'Астагфируллах.',
-          translation: 'Я прошу прощения у Аллаха.',
+          id: "seed-astaghfirullah",
+          title: "Астагфируллах",
+          arabic: "أَسْتَغْفِرُ ٱللَّهَ",
+          transliteration: "Астагфируллах.",
+          translation: "Я прошу прощения у Аллаха.",
           target: 100,
-          source: 'Краткий истигфар'
+          source: "Краткий истигфар"
         },
         {
-          id: 'seed-la-hawla-aliyy',
-          title: 'Ля хауля ва ля куввата илля биЛляхи-ль-Алиййи-ль-Азым',
-          arabic: 'لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِٱللَّهِ ٱلْعَلِيِّ ٱلْعَظِيمِ',
-          transliteration: 'Ля хауля ва ля куввата илля биЛляхи-ль-‘Алиййи-ль-‘Азым.',
-          translation: 'Нет силы и мощи ни у кого, кроме Аллаха, Возвышенного, Великого.',
+          id: "seed-la-hawla-aliyy",
+          title: "Ля хауля ва ля куввата илля биЛляхи-ль-Алиййи-ль-Азым",
+          arabic: "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِٱللَّهِ ٱلْعَلِيِّ ٱلْعَظِيمِ",
+          transliteration: "Ля хауля ва ля куввата илля биЛляхи-ль-‘Алиййи-ль-‘Азым.",
+          translation: "Нет силы и мощи ни у кого, кроме Аллаха, Возвышенного, Великого.",
           target: 100,
-          source: 'Hisn al-Muslim 2'
+          source: "Hisn al-Muslim 2"
         },
         {
-          id: 'seed-rabbi-inni',
-          title: 'Рабби инни лима анзальта',
-          arabic: 'رَبِّ إِنِّي لِمَا أَنزَلْتَ إِلَيَّ مِنْ خَيْرٍ فَقِيرٌ',
-          transliteration: 'Рабби инни лима анзальта иляййа мин хайрин факир.',
-          translation: 'Господь мой, поистине я нуждаюсь в любом благе, которое Ты ниспошлёшь мне.',
+          id: "seed-rabbi-inni",
+          title: "Рабби инни лима анзальта",
+          arabic: "رَبِّ إِنِّي لِمَا أَنزَلْتَ إِلَيَّ مِنْ خَيْرٍ فَقِيرٌ",
+          transliteration: "Рабби инни лима анзальта иляййа мин хайрин факир.",
+          translation: "Господь мой, поистине я нуждаюсь в любом благе, которое Ты ниспошлёшь мне.",
           target: 100,
-          source: 'Коран 28:24'
+          source: "Коран 28:24"
         }
       ],
       progressByDate: {}
     };
 
     const state = {
-      screen: 'mine',
+      screen: "mine",
       zikrId: null,
       calendarOffset: 0,
       data: loadData()
     };
 
-    const appEl = document.getElementById('app');
-    const screenTitleEl = document.getElementById('screenTitle');
-    const backButtonEl = document.getElementById('backButton');
-    const addQuickButtonEl = document.getElementById('addQuickButton');
-    const dialogEl = document.getElementById('zikrDialog');
-    const closeDialogEl = document.getElementById('closeDialog');
-    const zikrFormEl = document.getElementById('zikrForm');
-    const dialogTitleEl = document.getElementById('dialogTitle');
-    const submitDialogButtonEl = document.getElementById('submitDialogButton');
+    const appEl = document.getElementById("app");
+    const screenTitleEl = document.getElementById("screenTitle");
+    const backButtonEl = document.getElementById("backButton");
+    const addQuickButtonEl = document.getElementById("addQuickButton");
+    const dialogEl = document.getElementById("zikrDialog");
+    const closeDialogEl = document.getElementById("closeDialog");
+    const zikrFormEl = document.getElementById("zikrForm");
+    const dialogTitleEl = document.getElementById("dialogTitle");
+    const submitDialogButtonEl = document.getElementById("submitDialogButton");
+    const detailDockEl = document.getElementById("detailDock");
+    const manageDialogEl = document.getElementById("manageDialog");
+    const closeManageDialogEl = document.getElementById("closeManageDialog");
+    const manageEditBtnEl = document.getElementById("manageEditBtn");
+    const manageResetBtnEl = document.getElementById("manageResetBtn");
+    const manageDeleteBtnEl = document.getElementById("manageDeleteBtn");
 
     attachEvents();
     render();
+
+    function scrollToTopNow() {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      appEl.scrollTop = 0;
+    }
+
+    function forceTop() {
+      scrollToTopNow();
+      requestAnimationFrame(scrollToTopNow);
+      setTimeout(scrollToTopNow, 0);
+      setTimeout(scrollToTopNow, 80);
+      setTimeout(scrollToTopNow, 180);
+      setTimeout(scrollToTopNow, 320);
+    }
+
+    function afterRenderTop() {
+      setTimeout(forceTop, 0);
+    }
 
     function loadData() {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -781,7 +848,10 @@
         const parsed = JSON.parse(raw);
         return {
           customZikrs: Array.isArray(parsed.customZikrs)
-            ? parsed.customZikrs.map((item, index) => ({ ...structuredClone(seedData.customZikrs[index] || {}), ...item }))
+            ? parsed.customZikrs.map((item, index) => ({
+                ...structuredClone(seedData.customZikrs[index] || {}),
+                ...item
+              }))
             : structuredClone(seedData.customZikrs),
           progressByDate: parsed.progressByDate || {}
         };
@@ -800,41 +870,54 @@
       );
     }
 
-    function afterRenderTop() {
-      setTimeout(() => {
-        if (typeof forceTop === 'function') forceTop();
-      }, 0);
-    }
-
     function attachEvents() {
-      backButtonEl.addEventListener('click', handleBack);
+      backButtonEl.addEventListener("click", handleBack);
 
-      addQuickButtonEl.addEventListener('click', () => {
+      addQuickButtonEl.addEventListener("click", () => {
         openCreateDialog();
       });
 
-      closeDialogEl.addEventListener('click', () => {
+      closeDialogEl.addEventListener("click", () => {
         dialogEl.close();
       });
 
-      dialogEl.addEventListener('click', (event) => {
+      closeManageDialogEl.addEventListener("click", () => {
+        manageDialogEl.close();
+      });
+
+      dialogEl.addEventListener("click", (event) => {
         const rect = dialogEl.getBoundingClientRect();
-        const inDialog = rect.top <= event.clientY && event.clientY <= rect.top + rect.height
-          && rect.left <= event.clientX && event.clientX <= rect.left + rect.width;
+        const inDialog =
+          rect.top <= event.clientY &&
+          event.clientY <= rect.top + rect.height &&
+          rect.left <= event.clientX &&
+          event.clientX <= rect.left + rect.width;
+
         if (!inDialog) dialogEl.close();
       });
 
-      zikrFormEl.addEventListener('submit', (event) => {
+      manageDialogEl.addEventListener("click", (event) => {
+        const rect = manageDialogEl.getBoundingClientRect();
+        const inDialog =
+          rect.top <= event.clientY &&
+          event.clientY <= rect.top + rect.height &&
+          rect.left <= event.clientX &&
+          event.clientX <= rect.left + rect.width;
+
+        if (!inDialog) manageDialogEl.close();
+      });
+
+      zikrFormEl.addEventListener("submit", (event) => {
         event.preventDefault();
         const formData = new FormData(zikrFormEl);
-        const existingId = String(formData.get('id') || '').trim();
-        const target = Math.max(1, Number(formData.get('target')) || 1);
+        const existingId = String(formData.get("id") || "").trim();
+        const target = Math.max(1, Number(formData.get("target")) || 1);
 
         const payload = {
-          title: String(formData.get('title') || '').trim(),
-          arabic: String(formData.get('arabic')).trim(),
-          transliteration: String(formData.get('transliteration')).trim(),
-          translation: String(formData.get('translation')).trim(),
+          title: String(formData.get("title") || "").trim(),
+          arabic: String(formData.get("arabic")).trim(),
+          transliteration: String(formData.get("transliteration")).trim(),
+          translation: String(formData.get("translation")).trim(),
           target
         };
 
@@ -843,7 +926,7 @@
           if (zikr) {
             Object.assign(zikr, payload);
             Object.values(state.data.progressByDate).forEach((dayProgress) => {
-              if (typeof dayProgress[existingId] !== 'undefined') {
+              if (typeof dayProgress[existingId] !== "undefined") {
                 dayProgress[existingId] = Math.min(Number(dayProgress[existingId] || 0), target);
               }
             });
@@ -858,18 +941,33 @@
         saveData();
         zikrFormEl.reset();
         dialogEl.close();
-        state.screen = 'detail';
+        state.screen = "detail";
         render();
         afterRenderTop();
       });
 
-      document.querySelectorAll('.nav-btn').forEach((button) => {
-        button.addEventListener('click', () => {
+      document.querySelectorAll(".nav-btn").forEach((button) => {
+        button.addEventListener("click", () => {
           state.screen = button.dataset.tab;
           state.zikrId = null;
           render();
           afterRenderTop();
         });
+      });
+
+      manageEditBtnEl.addEventListener("click", () => {
+        manageDialogEl.close();
+        openEditDialog(state.zikrId);
+      });
+
+      manageResetBtnEl.addEventListener("click", () => {
+        manageDialogEl.close();
+        resetZikr(state.zikrId);
+      });
+
+      manageDeleteBtnEl.addEventListener("click", () => {
+        manageDialogEl.close();
+        deleteCurrentZikr();
       });
     }
 
@@ -887,16 +985,7 @@
 
     function getDisplayLabel(zikrId) {
       const index = getZikrIndex(zikrId);
-      return index >= 0 ? `Зикр ${index + 1}` : 'Зикр';
-    }
-
-    function getDisplaySubtitle(zikr) {
-      return zikr.title || zikr.transliteration || zikr.translation || '';
-    }
-
-    function getShortText(value, maxLength = 68) {
-      if (!value) return '';
-      return value.length > maxLength ? `${value.slice(0, maxLength).trim()}…` : value;
+      return index >= 0 ? `Зикр ${index + 1}` : "Зикр";
     }
 
     function getTodayKey() {
@@ -904,7 +993,7 @@
     }
 
     function getDateKey(date) {
-      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
     }
 
     function ensureDateProgress(dateKey = getTodayKey()) {
@@ -934,10 +1023,6 @@
       }, 0);
     }
 
-    function getAllTimeTotal() {
-      return getAllZikrs().reduce((sum, zikr) => sum + getAllTimeCount(zikr.id), 0);
-    }
-
     function getDayTotal(dateKey = getTodayKey()) {
       return getAllZikrs().reduce((sum, zikr) => sum + getCount(zikr.id, dateKey), 0);
     }
@@ -959,21 +1044,31 @@
       setCount(zikrId, nextCount);
 
       if (tg?.HapticFeedback) {
-        tg.HapticFeedback.impactOccurred('light');
+        tg.HapticFeedback.impactOccurred("light");
       }
 
-      render();
-    }
-
-    function decrementZikr(zikrId) {
-      const nextCount = Math.max(0, getCount(zikrId) - 1);
-      setCount(zikrId, nextCount);
       render();
     }
 
     function resetZikr(zikrId) {
       setCount(zikrId, 0);
       render();
+    }
+
+    function deleteCurrentZikr() {
+      const confirmed = window.confirm("Удалить этот зикр?");
+      if (!confirmed) return;
+
+      state.data.customZikrs = state.data.customZikrs.filter((item) => item.id !== state.zikrId);
+      Object.values(state.data.progressByDate).forEach((dayProgress) => {
+        delete dayProgress[state.zikrId];
+      });
+
+      saveData();
+      state.screen = "mine";
+      state.zikrId = null;
+      render();
+      afterRenderTop();
     }
 
     function getTodayStats() {
@@ -1049,7 +1144,7 @@
       }
 
       return {
-        monthLabel: monthDate.toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' }),
+        monthLabel: monthDate.toLocaleDateString("ru-RU", { month: "long", year: "numeric" }),
         cells
       };
     }
@@ -1063,7 +1158,7 @@
       let doneDays = 0;
 
       Object.keys(state.data.progressByDate).forEach((dateKey) => {
-        const [y, m] = dateKey.split('-').map(Number);
+        const [y, m] = dateKey.split("-").map(Number);
         if (y === year && m === month + 1) {
           const stats = getDayStats(dateKey);
           if (stats.active) activeDays += 1;
@@ -1076,9 +1171,9 @@
 
     function openCreateDialog() {
       zikrFormEl.reset();
-      dialogTitleEl.textContent = 'Добавить зикр';
-      submitDialogButtonEl.textContent = 'Сохранить';
-      zikrFormEl.elements.id.value = '';
+      dialogTitleEl.textContent = "Добавить зикр";
+      submitDialogButtonEl.textContent = "Сохранить";
+      zikrFormEl.elements.id.value = "";
       zikrFormEl.elements.target.value = 100;
       dialogEl.showModal();
     }
@@ -1087,20 +1182,20 @@
       const zikr = getZikrById(zikrId);
       if (!zikr) return;
 
-      dialogTitleEl.textContent = 'Редактировать зикр';
-      submitDialogButtonEl.textContent = 'Сохранить изменения';
+      dialogTitleEl.textContent = "Редактировать зикр";
+      submitDialogButtonEl.textContent = "Сохранить изменения";
       zikrFormEl.elements.id.value = zikr.id;
-      zikrFormEl.elements.title.value = zikr.title || '';
-      zikrFormEl.elements.arabic.value = zikr.arabic || '';
-      zikrFormEl.elements.transliteration.value = zikr.transliteration || '';
-      zikrFormEl.elements.translation.value = zikr.translation || '';
+      zikrFormEl.elements.title.value = zikr.title || "";
+      zikrFormEl.elements.arabic.value = zikr.arabic || "";
+      zikrFormEl.elements.transliteration.value = zikr.transliteration || "";
+      zikrFormEl.elements.translation.value = zikr.translation || "";
       zikrFormEl.elements.target.value = zikr.target || 100;
       dialogEl.showModal();
     }
 
     function handleBack() {
-      if (state.screen === 'detail') {
-        state.screen = 'mine';
+      if (state.screen === "detail") {
+        state.screen = "mine";
         state.zikrId = null;
         render();
         afterRenderTop();
@@ -1108,35 +1203,42 @@
     }
 
     function syncNav() {
-      const active = state.screen === 'detail' ? 'mine' : state.screen;
-      document.querySelectorAll('.nav-btn').forEach((button) => {
-        button.classList.toggle('active', button.dataset.tab === active);
+      const active = state.screen === "detail" ? "mine" : state.screen;
+      document.querySelectorAll(".nav-btn").forEach((button) => {
+        button.classList.toggle("active", button.dataset.tab === active);
       });
     }
 
     function setHeader(title, showBack = false) {
       screenTitleEl.textContent = title;
-      backButtonEl.classList.toggle('hidden', !showBack);
+      backButtonEl.classList.toggle("hidden", !showBack);
     }
 
     function render() {
       syncNav();
 
-      if (state.screen === 'detail') {
+      const isDetail = state.screen === "detail";
+      appEl.classList.toggle("with-detail-dock", isDetail);
+      detailDockEl.classList.toggle("active", isDetail);
+
+      if (state.screen === "detail") {
         setHeader(getDisplayLabel(state.zikrId), true);
         appEl.innerHTML = renderDetail(state.zikrId);
+        detailDockEl.innerHTML = renderDetailDock(state.zikrId);
         bindDetailActions();
         return;
       }
 
-      if (state.screen === 'today') {
-        setHeader('Сегодня');
+      detailDockEl.innerHTML = "";
+
+      if (state.screen === "today") {
+        setHeader("Сегодня");
         appEl.innerHTML = renderToday();
         bindTodayActions();
         return;
       }
 
-      setHeader('Мои зикры');
+      setHeader("Мои зикры");
       appEl.innerHTML = renderMine();
       bindZikrRows();
     }
@@ -1144,6 +1246,7 @@
     function renderZikrRow(zikr) {
       const todayCount = getCount(zikr.id);
       const allTimeCount = getAllTimeCount(zikr.id);
+
       return `
         <button class="list-row zikr-row" data-zikr-id="${zikr.id}">
           <div>
@@ -1177,7 +1280,7 @@
 
       return `
         <section class="screen">
-          ${items.map((zikr) => renderZikrRow(zikr)).join('')}
+          ${items.map((zikr) => renderZikrRow(zikr)).join("")}
         </section>
       `;
     }
@@ -1194,29 +1297,17 @@
         `;
       }
 
-      const count = getCount(zikr.id);
-      const done = isDone(zikr.id);
       const allTimeCount = getAllTimeCount(zikr.id);
       const completedDays = getCompletedDaysForZikr(zikr.id);
+      const done = isDone(zikr.id);
+      const count = getCount(zikr.id);
 
       return `
         <section class="screen">
           <div class="card detail-header">
-            ${zikr.arabic ? `<div class="arabic">${zikr.arabic}</div>` : ''}
-            ${zikr.transliteration ? `<div class="transliteration">${zikr.transliteration}</div>` : ''}
-            ${zikr.translation ? `<div class="translation">${zikr.translation}</div>` : ''}
-          </div>
-
-          <div class="card counter-card">
-            <div class="counter-wrap">
-              <button class="counter-circle" id="incrementBtn">${count}</button>
-              <div class="counter-target">Сегодняшняя цель: ${zikr.target}</div>
-            </div>
-
-            <div class="counter-actions">
-              <button class="ghost-button" id="resetBtn">Сбросить</button>
-              ${done ? '<button class="primary-button" disabled>Выполнено сегодня ✅</button>' : ''}
-            </div>
+            ${zikr.arabic ? `<div class="arabic">${zikr.arabic}</div>` : ""}
+            ${zikr.transliteration ? `<div class="transliteration">${zikr.transliteration}</div>` : ""}
+            ${zikr.translation ? `<div class="translation">${zikr.translation}</div>` : ""}
           </div>
 
           <div class="card">
@@ -1235,18 +1326,45 @@
               </div>
               <div>
                 <div class="muted">Статус</div>
-                <div class="metric-value ${done ? 'success-text' : ''}">${done ? 'Готово' : 'В процессе'}</div>
+                <div class="metric-value ${done ? "success-text" : ""}">${done ? "Готово" : "В процессе"}</div>
               </div>
             </div>
           </div>
-
-          <div class="card">
-            <div class="row-actions">
-              <button class="secondary-button" id="editZikrBtn">Редактировать</button>
-              <button class="danger-button" id="deleteCustomBtn">Удалить зикр</button>
-            </div>
-          </div>
         </section>
+      `;
+    }
+
+    function renderDetailDock(zikrId) {
+      const zikr = getZikrById(zikrId);
+      if (!zikr) return "";
+
+      const count = getCount(zikr.id);
+      const done = isDone(zikr.id);
+      const progress = zikr.target ? Math.min(100, Math.round((count / zikr.target) * 100)) : 0;
+
+      return `
+        <div class="detail-dock-card">
+          <button class="tap-panel" id="incrementPanelBtn" aria-label="Добавить повтор">
+            <div class="tap-progress">
+              <div class="tap-progress-fill" style="width:${progress}%"></div>
+            </div>
+
+            <div class="tap-count">${count}</div>
+
+            ${
+              done
+                ? '<div class="tap-done">Выполнено сегодня ✅</div>'
+                : `<div class="tap-progress-text">${count}/${zikr.target}</div>`
+            }
+
+            <div class="tap-hint">Нажмите в любое место панели</div>
+          </button>
+
+          <div class="tap-controls">
+            <button class="ghost-button dock-btn" id="resetBtn">Сбросить</button>
+            <button class="secondary-button dock-btn" id="manageBtn">Опции</button>
+          </div>
+        </div>
       `;
     }
 
@@ -1254,7 +1372,7 @@
       const month = getMonthModel(state.calendarOffset);
       const monthActivity = getMonthActivity(state.calendarOffset);
       const todayStats = getTodayStats();
-      const weekdays = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+      const weekdays = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
       const zikrs = getAllZikrs();
 
       return `
@@ -1293,19 +1411,20 @@
             </div>
 
             <div class="calendar-weekdays">
-              ${weekdays.map((day) => `<div class="weekday-cell">${day}</div>`).join('')}
+              ${weekdays.map((day) => `<div class="weekday-cell">${day}</div>`).join("")}
             </div>
 
             <div class="calendar-grid">
               ${month.cells.map((item) => {
                 if (item.empty) return '<div class="calendar-cell empty"></div>';
+
                 return `
-                  <div class="calendar-cell ${item.isToday ? 'today' : ''} ${item.allDone ? 'done' : ''} ${item.active && !item.allDone ? 'active' : ''}">
+                  <div class="calendar-cell ${item.isToday ? "today" : ""} ${item.allDone ? "done" : ""} ${item.active && !item.allDone ? "active" : ""}">
                     <div class="calendar-day">${item.dayNumber}</div>
-                    <div class="calendar-mark">${item.allDone ? '✅' : item.active ? `${item.totalRepeats}` : '—'}</div>
+                    <div class="calendar-mark">${item.allDone ? "✅" : item.active ? `${item.totalRepeats}` : "—"}</div>
                   </div>
                 `;
-              }).join('')}
+              }).join("")}
             </div>
           </div>
 
@@ -1320,9 +1439,9 @@
                       <div class="summary-title">${getDisplayLabel(zikr.id)}</div>
                       <div class="muted">Сегодня ${getCount(zikr.id)} / ${zikr.target}</div>
                     </div>
-                    <div class="summary-value">${isDone(zikr.id) ? '✅' : getCount(zikr.id)}</div>
+                    <div class="summary-value">${isDone(zikr.id) ? "✅" : getCount(zikr.id)}</div>
                   </div>
-                `).join('')}
+                `).join("")}
               </div>
             ` : `
               <div class="empty-state" style="padding:12px 0 0;">
@@ -1335,33 +1454,33 @@
     }
 
     function bindZikrRows() {
-      appEl.querySelectorAll('.zikr-row').forEach((button) => {
-        button.addEventListener('click', () => {
+      appEl.querySelectorAll(".zikr-row").forEach((button) => {
+        button.addEventListener("click", () => {
           const zikr = getZikrById(button.dataset.zikrId);
           state.zikrId = zikr.id;
-          state.screen = 'detail';
+          state.screen = "detail";
           render();
           afterRenderTop();
         });
       });
 
-      const openCreateFromMine = document.getElementById('openCreateFromMine');
+      const openCreateFromMine = document.getElementById("openCreateFromMine");
       if (openCreateFromMine) {
-        openCreateFromMine.addEventListener('click', openCreateDialog);
+        openCreateFromMine.addEventListener("click", openCreateDialog);
       }
     }
 
     function bindTodayActions() {
-      const prevMonthBtn = document.getElementById('prevMonthBtn');
-      const nextMonthBtn = document.getElementById('nextMonthBtn');
+      const prevMonthBtn = document.getElementById("prevMonthBtn");
+      const nextMonthBtn = document.getElementById("nextMonthBtn");
 
-      prevMonthBtn?.addEventListener('click', () => {
+      prevMonthBtn?.addEventListener("click", () => {
         state.calendarOffset -= 1;
         render();
         afterRenderTop();
       });
 
-      nextMonthBtn?.addEventListener('click', () => {
+      nextMonthBtn?.addEventListener("click", () => {
         state.calendarOffset += 1;
         render();
         afterRenderTop();
@@ -1369,85 +1488,22 @@
     }
 
     function bindDetailActions() {
-      const incrementBtn = document.getElementById('incrementBtn');
-      const resetBtn = document.getElementById('resetBtn');
-      const editZikrBtn = document.getElementById('editZikrBtn');
-      const deleteCustomBtn = document.getElementById('deleteCustomBtn');
+      const incrementPanelBtn = document.getElementById("incrementPanelBtn");
+      const resetBtn = document.getElementById("resetBtn");
+      const manageBtn = document.getElementById("manageBtn");
 
-      incrementBtn?.addEventListener('click', () => incrementZikr(state.zikrId));
-      resetBtn?.addEventListener('click', () => resetZikr(state.zikrId));
-      editZikrBtn?.addEventListener('click', () => openEditDialog(state.zikrId));
+      incrementPanelBtn?.addEventListener("click", () => {
+        incrementZikr(state.zikrId);
+      });
 
-      deleteCustomBtn?.addEventListener('click', () => {
-        const confirmed = window.confirm('Удалить этот зикр?');
-        if (!confirmed) return;
+      resetBtn?.addEventListener("click", () => {
+        resetZikr(state.zikrId);
+      });
 
-        state.data.customZikrs = state.data.customZikrs.filter((item) => item.id !== state.zikrId);
-        Object.values(state.data.progressByDate).forEach((dayProgress) => {
-          delete dayProgress[state.zikrId];
-        });
-
-        saveData();
-        state.screen = 'mine';
-        state.zikrId = null;
-        render();
-        afterRenderTop();
+      manageBtn?.addEventListener("click", () => {
+        manageDialogEl.showModal();
       });
     }
-  </script>
-
-  <script>
-    const telegramApp = window.Telegram?.WebApp;
-
-    function scrollToTopNow() {
-      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
-
-      const shell = document.querySelector(".app-shell");
-      if (shell) {
-        shell.scrollIntoView({ block: "start", behavior: "auto" });
-      }
-
-      const app = document.getElementById("app");
-      if (app) app.scrollTop = 0;
-    }
-
-    function forceTop() {
-      scrollToTopNow();
-      requestAnimationFrame(scrollToTopNow);
-      setTimeout(scrollToTopNow, 0);
-      setTimeout(scrollToTopNow, 80);
-      setTimeout(scrollToTopNow, 180);
-      setTimeout(scrollToTopNow, 320);
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      telegramApp?.ready();
-      telegramApp?.expand();
-
-      if ("scrollRestoration" in history) {
-        history.scrollRestoration = "manual";
-      }
-
-      forceTop();
-    });
-
-    window.addEventListener("load", forceTop);
-    window.addEventListener("pageshow", forceTop);
-
-    document.addEventListener("dblclick", (e) => {
-      e.preventDefault();
-    }, { passive: false });
-
-    let lastTouchEnd = 0;
-    document.addEventListener("touchend", (e) => {
-      const now = Date.now();
-      if (now - lastTouchEnd <= 300) {
-        e.preventDefault();
-      }
-      lastTouchEnd = now;
-    }, { passive: false });
   </script>
 </body>
 </html>
