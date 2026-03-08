@@ -106,7 +106,7 @@
     }
 
     #app.with-detail-dock {
-      padding-bottom: 270px;
+      padding-bottom: 300px;
     }
 
     .screen {
@@ -127,7 +127,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      padding: 18px 18px;
+      padding: 18px;
       border-radius: var(--radius-lg);
       background: var(--card);
       box-shadow: var(--shadow);
@@ -189,22 +189,6 @@
       color: var(--muted);
       line-height: 1.7;
       font-size: 17px;
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .metric-value {
-      font-size: 26px;
-      font-weight: 800;
-      margin-top: 6px;
-    }
-
-    .success-text {
-      color: var(--success);
     }
 
     .stat-grid {
@@ -314,39 +298,6 @@
       font-weight: 700;
     }
 
-    .summary-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .summary-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 14px 0;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .summary-row:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
-    }
-
-    .summary-title {
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-
-    .summary-value {
-      min-width: 58px;
-      text-align: right;
-      font-size: 28px;
-      font-weight: 800;
-      color: var(--primary);
-    }
-
     .bottom-nav {
       position: fixed;
       bottom: 14px;
@@ -433,11 +384,11 @@
     }
 
     .tap-count {
-      font-size: 72px;
+      font-size: 56px;
       line-height: 1;
       font-weight: 800;
       color: var(--text);
-      margin-top: 6px;
+      margin-top: 4px;
     }
 
     .tap-progress-text {
@@ -465,9 +416,9 @@
       font-weight: 600;
     }
 
-    .tap-controls {
+    .tap-controls-3 {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
       gap: 10px;
     }
 
@@ -503,6 +454,7 @@
 
     .dock-btn {
       min-height: 50px;
+      padding: 0 10px;
     }
 
     .modal {
@@ -573,12 +525,25 @@
       gap: 10px;
     }
 
+    .manage-total {
+      background: #f8fafc;
+      border-radius: 18px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .manage-total strong {
+      font-size: 24px;
+    }
+
     @media (max-width: 390px) {
       .search-pill {
         font-size: 18px;
       }
 
-      .grid-2,
       .stat-grid {
         grid-template-columns: 1fr;
       }
@@ -597,11 +562,15 @@
       }
 
       .tap-count {
-        font-size: 62px;
+        font-size: 52px;
       }
 
       .tap-progress-text {
         font-size: 24px;
+      }
+
+      .tap-controls-3 {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -664,8 +633,13 @@
   <dialog id="manageDialog" class="modal">
     <div class="modal-card">
       <div class="modal-head">
-        <h3>Управление зикром</h3>
+        <h3 id="manageTitle">Управление зикром</h3>
         <button type="button" id="closeManageDialog" class="ghost-button">✕</button>
+      </div>
+
+      <div class="manage-total">
+        <span class="muted">Всего прочитано</span>
+        <strong id="manageTotalValue">0</strong>
       </div>
 
       <div class="manage-actions">
@@ -696,7 +670,7 @@
       lastTouchEnd = now;
     }, { passive: false });
 
-    const STORAGE_KEY = "zikr-miniapp-state-v8";
+    const STORAGE_KEY = "zikr-miniapp-state-v9";
 
     const seedData = {
       customZikrs: [
@@ -784,7 +758,7 @@
         {
           id: "seed-rabbi-inni",
           title: "Рабби инни лима анзальта",
-          arabic: "رَبِّ إِنِّي لِمَا أَنزَلْتَ إِلَيَّ مِنْ خَيْرٍ فَقِيرٌ",
+          arabic: "رَبِّ إِنِّي لِمَا أَنزَلْتَ إِلَيْ مِنْ خَيْرٍ فَقِيرٌ",
           transliteration: "Рабби инни лима анзальта иляййа мин хайрин факир.",
           translation: "Господь мой, поистине я нуждаюсь в любом благе, которое Ты ниспошлёшь мне.",
           target: 100,
@@ -816,6 +790,8 @@
     const manageEditBtnEl = document.getElementById("manageEditBtn");
     const manageResetBtnEl = document.getElementById("manageResetBtn");
     const manageDeleteBtnEl = document.getElementById("manageDeleteBtn");
+    const manageTitleEl = document.getElementById("manageTitle");
+    const manageTotalValueEl = document.getElementById("manageTotalValue");
 
     attachEvents();
     render();
@@ -892,7 +868,6 @@
           event.clientY <= rect.top + rect.height &&
           rect.left <= event.clientX &&
           event.clientX <= rect.left + rect.width;
-
         if (!inDialog) dialogEl.close();
       });
 
@@ -903,7 +878,6 @@
           event.clientY <= rect.top + rect.height &&
           rect.left <= event.clientX &&
           event.clientX <= rect.left + rect.width;
-
         if (!inDialog) manageDialogEl.close();
       });
 
@@ -1027,10 +1001,6 @@
       return getAllZikrs().reduce((sum, zikr) => sum + getCount(zikr.id, dateKey), 0);
     }
 
-    function getCompletedDaysForZikr(zikrId) {
-      return Object.keys(state.data.progressByDate).filter((dateKey) => isDone(zikrId, dateKey)).length;
-    }
-
     function isDone(zikrId, dateKey = getTodayKey()) {
       const zikr = getZikrById(zikrId);
       if (!zikr) return false;
@@ -1079,8 +1049,7 @@
         total: zikrs.length,
         completed,
         totalRepeats,
-        percent: zikrs.length ? Math.round((completed / zikrs.length) * 100) : 0,
-        allDone: zikrs.length > 0 && completed === zikrs.length
+        percent: zikrs.length ? Math.round((completed / zikrs.length) * 100) : 0
       };
     }
 
@@ -1193,6 +1162,26 @@
       dialogEl.showModal();
     }
 
+    function openManageDialog() {
+      const zikr = getZikrById(state.zikrId);
+      if (!zikr) return;
+
+      manageTitleEl.textContent = `Управление — ${getDisplayLabel(zikr.id)}`;
+      manageTotalValueEl.textContent = getAllTimeCount(zikr.id);
+      manageDialogEl.showModal();
+    }
+
+    function goToNextZikr() {
+      const all = getAllZikrs();
+      if (!all.length || !state.zikrId) return;
+
+      const currentIndex = getZikrIndex(state.zikrId);
+      const nextIndex = currentIndex >= 0 ? (currentIndex + 1) % all.length : 0;
+      state.zikrId = all[nextIndex].id;
+      render();
+      afterRenderTop();
+    }
+
     function handleBack() {
       if (state.screen === "detail") {
         state.screen = "mine";
@@ -1297,38 +1286,12 @@
         `;
       }
 
-      const allTimeCount = getAllTimeCount(zikr.id);
-      const completedDays = getCompletedDaysForZikr(zikr.id);
-      const done = isDone(zikr.id);
-      const count = getCount(zikr.id);
-
       return `
         <section class="screen">
           <div class="card detail-header">
             ${zikr.arabic ? `<div class="arabic">${zikr.arabic}</div>` : ""}
             ${zikr.transliteration ? `<div class="transliteration">${zikr.transliteration}</div>` : ""}
             ${zikr.translation ? `<div class="translation">${zikr.translation}</div>` : ""}
-          </div>
-
-          <div class="card">
-            <div class="grid-2">
-              <div>
-                <div class="muted">Сегодня</div>
-                <div class="metric-value">${count} / ${zikr.target}</div>
-              </div>
-              <div>
-                <div class="muted">Всего</div>
-                <div class="metric-value">${allTimeCount}</div>
-              </div>
-              <div>
-                <div class="muted">Дней выполнено</div>
-                <div class="metric-value">${completedDays}</div>
-              </div>
-              <div>
-                <div class="muted">Статус</div>
-                <div class="metric-value ${done ? "success-text" : ""}">${done ? "Готово" : "В процессе"}</div>
-              </div>
-            </div>
           </div>
         </section>
       `;
@@ -1341,6 +1304,7 @@
       const count = getCount(zikr.id);
       const done = isDone(zikr.id);
       const progress = zikr.target ? Math.min(100, Math.round((count / zikr.target) * 100)) : 0;
+      const hasNext = getAllZikrs().length > 1;
 
       return `
         <div class="detail-dock-card">
@@ -1360,9 +1324,10 @@
             <div class="tap-hint">Нажмите в любое место панели</div>
           </button>
 
-          <div class="tap-controls">
+          <div class="tap-controls-3">
             <button class="ghost-button dock-btn" id="resetBtn">Сбросить</button>
             <button class="secondary-button dock-btn" id="manageBtn">Опции</button>
+            <button class="secondary-button dock-btn" id="nextZikrBtn" ${hasNext ? "" : "disabled"}>Следующий</button>
           </div>
         </div>
       `;
@@ -1373,7 +1338,6 @@
       const monthActivity = getMonthActivity(state.calendarOffset);
       const todayStats = getTodayStats();
       const weekdays = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
-      const zikrs = getAllZikrs();
 
       return `
         <section class="screen">
@@ -1427,28 +1391,6 @@
               }).join("")}
             </div>
           </div>
-
-          <div class="card">
-            <h3 style="margin-top:0;">Сегодняшний список</h3>
-            <div class="muted" style="margin-bottom:12px;">После достижения нужного количества повторений зикр отмечается выполненным.</div>
-            ${zikrs.length ? `
-              <div class="summary-list">
-                ${zikrs.map((zikr) => `
-                  <div class="summary-row">
-                    <div>
-                      <div class="summary-title">${getDisplayLabel(zikr.id)}</div>
-                      <div class="muted">Сегодня ${getCount(zikr.id)} / ${zikr.target}</div>
-                    </div>
-                    <div class="summary-value">${isDone(zikr.id) ? "✅" : getCount(zikr.id)}</div>
-                  </div>
-                `).join("")}
-              </div>
-            ` : `
-              <div class="empty-state" style="padding:12px 0 0;">
-                <div class="muted">Сегодняшний список появится после того, как пользователь добавит первый зикр.</div>
-              </div>
-            `}
-          </div>
         </section>
       `;
     }
@@ -1491,6 +1433,7 @@
       const incrementPanelBtn = document.getElementById("incrementPanelBtn");
       const resetBtn = document.getElementById("resetBtn");
       const manageBtn = document.getElementById("manageBtn");
+      const nextZikrBtn = document.getElementById("nextZikrBtn");
 
       incrementPanelBtn?.addEventListener("click", () => {
         incrementZikr(state.zikrId);
@@ -1501,9 +1444,15 @@
       });
 
       manageBtn?.addEventListener("click", () => {
-        manageDialogEl.showModal();
+        openManageDialog();
+      });
+
+      nextZikrBtn?.addEventListener("click", () => {
+        goToNextZikr();
       });
     }
+
+    forceTop();
   </script>
 </body>
 </html>
