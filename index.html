@@ -186,7 +186,14 @@
       word-break: break-word;
     }
 
-    .transliteration,
+    .transliteration {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 17px;
+      font-weight: 700;
+      word-break: break-word;
+    }
+
     .translation {
       color: var(--muted);
       line-height: 1.7;
@@ -704,7 +711,7 @@
       lastTouchEnd = now;
     }, { passive: false });
 
-    const STORAGE_KEY = "zikr-miniapp-state-v11";
+    const STORAGE_KEY = "zikr-miniapp-state-v12";
 
     const seedData = {
       customZikrs: [
