@@ -1390,10 +1390,10 @@
         target: 100
       },
       {
-        title: "Повседневный зикр 6",
-        arabic: "لَا إِلَٰهَ إِلَّا ٱللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ لَهُ ٱلْمُلْكُ وَلَهُ ٱلْحَمْدُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ",
-        transliteration: "Ля иляха илля Ллаху вахдаху, ля шарика лях, ляху-ль-мульку ва ляху-ль-хамду, ва хува аля кулли шайин кадир.",
-        translation: "Нет божества, достойного поклонения, кроме одного Аллаха, у Которого нет сотоварища. Ему принадлежит власть и хвала, и Он мощен над всякой вещью.",
+        title: "АльхамдулилЛах",
+        arabic: "الْحَمْدُ لِلَّهِ",
+        transliteration: "АльхамдулилЛах.",
+        translation: "Хвала Аллаху.",
         target: 100
       },
       {
@@ -1478,6 +1478,38 @@
     render();
     forceTop();
 
+    function getUpdatedSeedDailySix() {
+      return {
+        id: "seed-daily-6",
+        category: "daily",
+        title: "АльхамдулилЛах",
+        arabic: "الْحَمْدُ لِلَّهِ",
+        transliteration: "АльхамдулилЛах.",
+        translation: "Хвала Аллаху.",
+        target: 100
+      };
+    }
+
+    function migrateCustomZikrs(customZikrs) {
+      if (!Array.isArray(customZikrs)) {
+        return structuredClone(seedData.customZikrs);
+      }
+
+      return customZikrs.map((item) => {
+        if (item.id === "seed-daily-6") {
+          return {
+            ...item,
+            ...getUpdatedSeedDailySix()
+          };
+        }
+
+        return {
+          ...item,
+          category: item.category || "daily"
+        };
+      });
+    }
+
     function loadData() {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return structuredClone(seedData);
@@ -1485,12 +1517,7 @@
       try {
         const parsed = JSON.parse(raw);
         return {
-          customZikrs: Array.isArray(parsed.customZikrs)
-            ? parsed.customZikrs.map((item) => ({
-                ...item,
-                category: item.category || "daily"
-              }))
-            : structuredClone(seedData.customZikrs),
+          customZikrs: migrateCustomZikrs(parsed.customZikrs),
           progressByDate: parsed.progressByDate || {}
         };
       } catch (_error) {
