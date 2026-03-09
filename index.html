@@ -88,7 +88,7 @@
       display: flex;
       align-items: center;
       font-size: 21px;
-      font-weight: 600;
+      font-weight: 700;
       background: rgba(255, 255, 255, 0.66);
       backdrop-filter: blur(8px);
     }
@@ -124,51 +124,74 @@
       padding: 22px;
     }
 
+    .category-card,
     .list-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      padding: 18px;
-      border-radius: var(--radius-lg);
+      gap: 14px;
+      padding: 20px;
+      border-radius: var(--radius-xl);
       background: var(--card);
       box-shadow: var(--shadow);
       text-align: left;
       width: 100%;
     }
 
+    .category-card-main,
+    .list-row-main {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .category-card-title,
     .list-row-title {
       font-size: 19px;
-      font-weight: 700;
-      margin-bottom: 6px;
+      font-weight: 800;
+      margin-bottom: 8px;
       color: var(--primary);
+    }
+
+    .category-card-sub,
+    .muted {
+      color: var(--muted);
+    }
+
+    .category-card-sub {
+      font-size: 15px;
+      line-height: 1.45;
     }
 
     .substat {
       margin-top: 6px;
       color: var(--primary);
       font-size: 14px;
-      font-weight: 600;
+      font-weight: 700;
     }
 
     .count-badge,
-    .status-badge {
-      min-width: 42px;
-      height: 42px;
-      padding: 0 12px;
+    .status-badge,
+    .category-badge {
+      min-width: 64px;
+      height: 54px;
+      padding: 0 14px;
       border-radius: 999px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-weight: 700;
+      font-weight: 800;
+      flex-shrink: 0;
     }
 
-    .count-badge {
+    .count-badge,
+    .category-badge {
       background: var(--primary-soft);
       color: var(--primary);
     }
 
     .status-badge.done {
+      min-width: 54px;
+      height: 54px;
       background: rgba(30, 167, 107, 0.14);
       color: var(--success);
     }
@@ -176,7 +199,8 @@
     .detail-header {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 14px;
+      padding-bottom: 26px;
     }
 
     .arabic {
@@ -184,13 +208,14 @@
       text-align: center;
       font-size: 30px;
       line-height: 1.9;
-      margin: 6px 0 0;
+      margin: 0;
       word-break: break-word;
+      font-weight: 700;
     }
 
     .transliteration {
       color: var(--muted);
-      line-height: 1.75;
+      line-height: 1.8;
       font-size: 17px;
       font-weight: 700;
       word-break: break-word;
@@ -198,7 +223,7 @@
 
     .translation {
       color: var(--muted);
-      line-height: 1.75;
+      line-height: 1.8;
       font-size: 17px;
       word-break: break-word;
     }
@@ -216,7 +241,7 @@
       padding: 18px;
       position: relative;
       overflow: hidden;
-      min-height: 110px;
+      min-height: 120px;
     }
 
     .stat-box strong {
@@ -639,10 +664,6 @@
       margin: 0 0 8px;
     }
 
-    .muted {
-      color: var(--muted);
-    }
-
     .manage-actions {
       display: flex;
       flex-direction: column;
@@ -700,6 +721,13 @@
       .diary-open-title {
         font-size: 24px;
       }
+
+      .count-badge,
+      .category-badge,
+      .status-badge.done {
+        min-width: 56px;
+        height: 50px;
+      }
     }
   </style>
 </head>
@@ -716,7 +744,7 @@
 
     <nav id="bottomNav" class="bottom-nav">
       <button class="nav-btn active" data-tab="mine">Мои зикры</button>
-      <button class="nav-btn" data-tab="today">Сегодня</button>
+      <button class="nav-btn" data-tab="stats">Статистика</button>
     </nav>
   </div>
 
@@ -728,6 +756,15 @@
       </div>
 
       <input name="id" type="hidden" />
+
+      <label>
+        Раздел
+        <select name="category">
+          <option value="morning">Утренние зикры</option>
+          <option value="evening">Вечерние зикры</option>
+          <option value="daily">Повседневные зикры</option>
+        </select>
+      </label>
 
       <label>
         Подпись / заметка
@@ -798,12 +835,28 @@
       lastTouchEnd = now;
     }, { passive: false });
 
-    const STORAGE_KEY = "zikr-miniapp-state-v13";
+    const STORAGE_KEY = "zikr-miniapp-state-v14";
+
+    const CATEGORY_META = {
+      morning: { title: "Утренние зикры" },
+      evening: { title: "Вечерние зикры" },
+      daily: { title: "Повседневные зикры" }
+    };
 
     const seedData = {
       customZikrs: [
         {
-          id: "seed-yunus",
+          id: "seed-morning-1",
+          category: "morning",
+          title: "Утренний зикр 1",
+          arabic: "أَصْبَحْنَا وَأَصْبَحَ ٱلْمُلْكُ لِلَّهِ",
+          transliteration: "Асбахна ва асбахаль-мульку лиллях.",
+          translation: "Мы вступили в утро, и власть принадлежит Аллаху.",
+          target: 100
+        },
+        {
+          id: "seed-morning-2",
+          category: "morning",
           title: "Дуа Юнуса",
           arabic: "لَا إِلَٰهَ إِلَّا أَنتَ سُبْحَانَكَ إِنِّي كُنتُ مِنَ ٱلظَّٰلِمِينَ",
           transliteration: "Ля иляха илля Анта, субханака, инни кунту мина-з-залимин.",
@@ -811,15 +864,27 @@
           target: 100
         },
         {
-          id: "seed-istighfar-full",
-          title: "Истигфар",
-          arabic: "أَسْتَغْفِرُ ٱللَّهَ وَأَتُوبُ إِلَيْهِ",
-          transliteration: "Астагфируллаха ва атубу иляйх.",
-          translation: "Я прошу у Аллаха прощения и каюсь перед Ним.",
+          id: "seed-morning-3",
+          category: "morning",
+          title: "Аллахумма салли аля Мухаммад",
+          arabic: "ٱللَّهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ",
+          transliteration: "Аллахумма салли аля Мухаммад ва аля али Мухаммад.",
+          translation: "О Аллах, благослови Мухаммада и семейство Мухаммада.",
+          target: 100
+        },
+
+        {
+          id: "seed-evening-1",
+          category: "evening",
+          title: "Вечерний зикр 1",
+          arabic: "أَمْسَيْنَا وَأَمْسَى ٱلْمُلْكُ لِلَّهِ",
+          transliteration: "Амсайна ва амсаль-мульку лиллях.",
+          translation: "Мы вступили в вечер, и власть принадлежит Аллаху.",
           target: 100
         },
         {
-          id: "seed-hasbiyallah",
+          id: "seed-evening-2",
+          category: "evening",
           title: "Хасбия-Ллаху",
           arabic: "حَسْبِيَ ٱللَّهُ لَا إِلَٰهَ إِلَّا هُوَ عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ ٱلْعَرْشِ ٱلْعَظِيمِ",
           transliteration: "Хасбия-Ллаху, ля иляха илля Хува, аляйхи таваккальту, ва хува Раббу-ль-‘Арши-ль-‘Азым.",
@@ -827,7 +892,18 @@
           target: 100
         },
         {
-          id: "seed-la-hawla",
+          id: "seed-evening-3",
+          category: "evening",
+          title: "Истигфар",
+          arabic: "أَسْتَغْفِرُ ٱللَّهَ وَأَتُوبُ إِلَيْهِ",
+          transliteration: "Астагфируллаха ва атубу иляйх.",
+          translation: "Я прошу у Аллаха прощения и каюсь перед Ним.",
+          target: 100
+        },
+
+        {
+          id: "seed-daily-1",
+          category: "daily",
           title: "Ля хауля ва ля куввата илля биЛлях",
           arabic: "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِٱللَّهِ",
           transliteration: "Ля хауля ва ля куввата илля биЛлях.",
@@ -835,15 +911,8 @@
           target: 100
         },
         {
-          id: "seed-la-ilaha-wahdahu",
-          title: "Ля иляха илля Ллаху вахдаху",
-          arabic: "لَا إِلَٰهَ إِلَّا ٱللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ ٱلْمُلْكُ وَلَهُ ٱلْحَمْدُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ",
-          transliteration: "Ля иляха илля Ллаху вахдаху, ля шарика лях, ляху-ль-мульку ва ляху-ль-хамду, ва хува аля кулли шайин кадир.",
-          translation: "Нет божества, достойного поклонения, кроме одного Аллаха, у Которого нет сотоварища. Ему принадлежит власть и хвала, и Он мощен над всякой вещью.",
-          target: 100
-        },
-        {
-          id: "seed-la-ilaha",
+          id: "seed-daily-2",
+          category: "daily",
           title: "Ля иляха илля Ллах",
           arabic: "لَا إِلَٰهَ إِلَّا ٱللَّهُ",
           transliteration: "Ля иляха илля Ллах.",
@@ -851,33 +920,10 @@
           target: 100
         },
         {
-          id: "seed-salawat",
-          title: "Аллахумма салли аля Мухаммад",
-          arabic: "ٱللَّهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ",
-          transliteration: "Аллахумма салли аля Мухаммад ва аля али Мухаммад.",
-          translation: "О Аллах, благослови Мухаммада и семейство Мухаммада.",
-          target: 100
-        },
-        {
-          id: "seed-astaghfirullah",
-          title: "Астагфируллах",
-          arabic: "أَسْتَغْفِرُ ٱللَّهَ",
-          transliteration: "Астагфируллах.",
-          translation: "Я прошу прощения у Аллаха.",
-          target: 100
-        },
-        {
-          id: "seed-la-hawla-aliyy",
-          title: "Ля хауля ва ля куввата илля биЛляхи-ль-Алиййи-ль-Азым",
-          arabic: "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِٱللَّهِ ٱلْعَلِيِّ ٱلْعَظِيمِ",
-          transliteration: "Ля хауля ва ля куввата илля биЛляхи-ль-‘Алиййи-ль-‘Азым.",
-          translation: "Нет силы и мощи ни у кого, кроме Аллаха, Возвышенного, Великого.",
-          target: 100
-        },
-        {
-          id: "seed-rabbi-inni",
+          id: "seed-daily-3",
+          category: "daily",
           title: "Рабби инни лима анзальта",
-          arabic: "رَبِّ إِنِّي لِمَا أَنزَلْتَ إِلَيْكَ مِنْ خَيْرٍ فَقِيرٌ",
+          arabic: "رَبِّ إِنِّي لِمَا أَنزَلْتَ إِلَيَّ مِنْ خَيْرٍ فَقِيرٌ",
           transliteration: "Рабби инни лима анзальта иляййа мин хайрин факир.",
           translation: "Господь мой, поистине я нуждаюсь в любом благе, которое Ты ниспошлёшь мне.",
           target: 100
@@ -889,6 +935,7 @@
     const state = {
       screen: "mine",
       zikrId: null,
+      currentCategory: "morning",
       calendarOffset: 0,
       data: loadData()
     };
@@ -943,9 +990,9 @@
         const parsed = JSON.parse(raw);
         return {
           customZikrs: Array.isArray(parsed.customZikrs)
-            ? parsed.customZikrs.map((item, index) => ({
-                ...structuredClone(seedData.customZikrs[index] || {}),
-                ...item
+            ? parsed.customZikrs.map((item) => ({
+                ...item,
+                category: item.category || "daily"
               }))
             : structuredClone(seedData.customZikrs),
           progressByDate: parsed.progressByDate || {}
@@ -969,7 +1016,7 @@
       backButtonEl.addEventListener("click", handleBack);
 
       addQuickButtonEl.addEventListener("click", () => {
-        openCreateDialog();
+        openCreateDialog(state.screen === "category" ? state.currentCategory : "daily");
       });
 
       closeDialogEl.addEventListener("click", () => {
@@ -1005,12 +1052,14 @@
         const formData = new FormData(zikrFormEl);
         const existingId = String(formData.get("id") || "").trim();
         const target = Math.max(1, Number(formData.get("target")) || 1);
+        const category = String(formData.get("category") || "daily");
 
         const payload = {
+          category,
           title: String(formData.get("title") || "").trim(),
-          arabic: String(formData.get("arabic")).trim(),
-          transliteration: String(formData.get("transliteration")).trim(),
-          translation: String(formData.get("translation")).trim(),
+          arabic: String(formData.get("arabic") || "").trim(),
+          transliteration: String(formData.get("transliteration") || "").trim(),
+          translation: String(formData.get("translation") || "").trim(),
           target
         };
 
@@ -1025,10 +1074,12 @@
             });
           }
           state.zikrId = existingId;
+          state.currentCategory = category;
         } else {
           const id = `custom-${Date.now()}`;
           state.data.customZikrs.unshift({ id, ...payload, isCustom: true });
           state.zikrId = id;
+          state.currentCategory = category;
         }
 
         saveData();
@@ -1064,16 +1115,19 @@
       });
     }
 
-    function getAllZikrs() {
-      return state.data.customZikrs;
+    function getAllZikrs(category = null) {
+      if (!category) return state.data.customZikrs;
+      return state.data.customZikrs.filter((item) => (item.category || "daily") === category);
     }
 
     function getZikrById(zikrId) {
-      return getAllZikrs().find((item) => item.id === zikrId);
+      return state.data.customZikrs.find((item) => item.id === zikrId);
     }
 
     function getZikrIndex(zikrId) {
-      return getAllZikrs().findIndex((item) => item.id === zikrId);
+      const zikr = getZikrById(zikrId);
+      if (!zikr) return -1;
+      return getAllZikrs(zikr.category).findIndex((item) => item.id === zikrId);
     }
 
     function getDisplayLabel(zikrId) {
@@ -1148,13 +1202,18 @@
       const confirmed = window.confirm("Удалить этот зикр?");
       if (!confirmed) return;
 
+      const deleted = getZikrById(state.zikrId);
       state.data.customZikrs = state.data.customZikrs.filter((item) => item.id !== state.zikrId);
       Object.values(state.data.progressByDate).forEach((dayProgress) => {
         delete dayProgress[state.zikrId];
       });
 
       saveData();
-      state.screen = "mine";
+
+      const remainingInCategory = getAllZikrs(deleted?.category || state.currentCategory);
+      if (state.screen === "detail") {
+        state.screen = remainingInCategory.length ? "category" : "mine";
+      }
       state.zikrId = null;
       render();
       afterRenderTop();
@@ -1169,6 +1228,20 @@
         completed,
         totalRepeats,
         percent: zikrs.length ? Math.round((completed / zikrs.length) * 100) : 0
+      };
+    }
+
+    function getCategoryStats(category) {
+      const items = getAllZikrs(category);
+      const completed = items.filter((item) => isDone(item.id)).length;
+      const totalToday = items.reduce((sum, item) => sum + getCount(item.id), 0);
+      const allTimeTotal = items.reduce((sum, item) => sum + getAllTimeCount(item.id), 0);
+      return {
+        total: items.length,
+        completed,
+        totalToday,
+        allTimeTotal,
+        percent: items.length ? Math.round((completed / items.length) * 100) : 0
       };
     }
 
@@ -1257,11 +1330,12 @@
       return { activeDays, doneDays };
     }
 
-    function openCreateDialog() {
+    function openCreateDialog(category = "daily") {
       zikrFormEl.reset();
       dialogTitleEl.textContent = "Добавить зикр";
       submitDialogButtonEl.textContent = "Сохранить";
       zikrFormEl.elements.id.value = "";
+      zikrFormEl.elements.category.value = category;
       zikrFormEl.elements.target.value = 100;
       dialogEl.showModal();
     }
@@ -1273,6 +1347,7 @@
       dialogTitleEl.textContent = "Редактировать зикр";
       submitDialogButtonEl.textContent = "Сохранить изменения";
       zikrFormEl.elements.id.value = zikr.id;
+      zikrFormEl.elements.category.value = zikr.category || "daily";
       zikrFormEl.elements.title.value = zikr.title || "";
       zikrFormEl.elements.arabic.value = zikr.arabic || "";
       zikrFormEl.elements.transliteration.value = zikr.transliteration || "";
@@ -1291,43 +1366,50 @@
     }
 
     function goToPrevZikr() {
-      const all = getAllZikrs();
-      if (!all.length || !state.zikrId) return;
-      const currentIndex = getZikrIndex(state.zikrId);
-      const prevIndex = currentIndex > 0 ? currentIndex - 1 : all.length - 1;
-      state.zikrId = all[prevIndex].id;
+      const items = getAllZikrs(state.currentCategory);
+      if (!items.length || !state.zikrId) return;
+      const currentIndex = items.findIndex((item) => item.id === state.zikrId);
+      const prevIndex = currentIndex > 0 ? currentIndex - 1 : items.length - 1;
+      state.zikrId = items[prevIndex].id;
       render();
       afterRenderTop();
     }
 
     function goToNextZikr() {
-      const all = getAllZikrs();
-      if (!all.length || !state.zikrId) return;
-      const currentIndex = getZikrIndex(state.zikrId);
-      const nextIndex = currentIndex >= 0 ? (currentIndex + 1) % all.length : 0;
-      state.zikrId = all[nextIndex].id;
+      const items = getAllZikrs(state.currentCategory);
+      if (!items.length || !state.zikrId) return;
+      const currentIndex = items.findIndex((item) => item.id === state.zikrId);
+      const nextIndex = currentIndex >= 0 ? (currentIndex + 1) % items.length : 0;
+      state.zikrId = items[nextIndex].id;
       render();
       afterRenderTop();
     }
 
     function handleBack() {
       if (state.screen === "detail") {
-        state.screen = "mine";
+        state.screen = "category";
         state.zikrId = null;
         render();
         afterRenderTop();
         return;
       }
 
+      if (state.screen === "category") {
+        state.screen = "mine";
+        render();
+        afterRenderTop();
+        return;
+      }
+
       if (state.screen === "habit") {
-        state.screen = "today";
+        state.screen = "stats";
         render();
         afterRenderTop();
       }
     }
 
     function syncNav() {
-      const active = state.screen === "habit" ? "today" : state.screen === "detail" ? "mine" : state.screen;
+      const active = state.screen === "stats" || state.screen === "habit" ? "stats" : "mine";
       document.querySelectorAll(".nav-btn").forEach((button) => {
         button.classList.toggle("active", button.dataset.tab === active);
       });
@@ -1358,6 +1440,13 @@
 
       detailDockEl.innerHTML = "";
 
+      if (state.screen === "category") {
+        setHeader(CATEGORY_META[state.currentCategory].title, true);
+        appEl.innerHTML = renderCategory(state.currentCategory);
+        bindCategoryActions();
+        return;
+      }
+
       if (state.screen === "habit") {
         setHeader("Дневник привычек", true);
         appEl.innerHTML = renderHabitJournal();
@@ -1365,16 +1454,32 @@
         return;
       }
 
-      if (state.screen === "today") {
-        setHeader("Сегодня");
-        appEl.innerHTML = renderToday();
-        bindTodayActions();
+      if (state.screen === "stats") {
+        setHeader("Статистика");
+        appEl.innerHTML = renderStats();
+        bindStatsActions();
         return;
       }
 
       setHeader("Мои зикры");
       appEl.innerHTML = renderMine();
-      bindZikrRows();
+      bindMineActions();
+    }
+
+    function renderCategoryCard(category) {
+      const meta = CATEGORY_META[category];
+      const stats = getCategoryStats(category);
+
+      return `
+        <button class="category-card" data-category="${category}">
+          <div class="category-card-main">
+            <div class="category-card-title">${meta.title}</div>
+            <div class="category-card-sub">Сегодня выполнено ${stats.completed}/${stats.total}</div>
+            <div class="substat">Всего прочитано: ${stats.allTimeTotal}</div>
+          </div>
+          <span class="category-badge">${stats.total}</span>
+        </button>
+      `;
     }
 
     function renderZikrRow(zikr) {
@@ -1383,7 +1488,7 @@
 
       return `
         <button class="list-row zikr-row" data-zikr-id="${zikr.id}">
-          <div>
+          <div class="list-row-main">
             <div class="list-row-title">${getDisplayLabel(zikr.id)}</div>
             <div class="muted">Сегодня ${todayCount} / ${zikr.target}</div>
             <div class="substat">Всего прочитано: ${allTimeCount}</div>
@@ -1396,17 +1501,24 @@
     }
 
     function renderMine() {
-      const items = state.data.customZikrs;
+      return `
+        <section class="screen">
+          ${renderCategoryCard("morning")}
+          ${renderCategoryCard("evening")}
+          ${renderCategoryCard("daily")}
+        </section>
+      `;
+    }
+
+    function renderCategory(category) {
+      const items = getAllZikrs(category);
 
       if (!items.length) {
         return `
           <section class="screen">
             <div class="card empty-state">
-              <h3>Пока нет своих зикров</h3>
-              <div class="muted">Можно добавить свои зикры и задать любое количество повторений для каждого.</div>
-              <div style="margin-top: 18px;">
-                <button class="primary-button" id="openCreateFromMine">Добавить свой зикр</button>
-              </div>
+              <h3>В этом разделе пока нет зикров</h3>
+              <div class="muted">Нажмите плюс сверху, чтобы добавить новый зикр.</div>
             </div>
           </section>
         `;
@@ -1449,7 +1561,7 @@
       const count = getCount(zikr.id);
       const done = isDone(zikr.id);
       const progress = zikr.target ? Math.min(100, Math.round((count / zikr.target) * 100)) : 0;
-      const hasMany = getAllZikrs().length > 1;
+      const hasMany = getAllZikrs(state.currentCategory).length > 1;
 
       return `
         <div class="detail-dock-card">
@@ -1478,7 +1590,7 @@
       `;
     }
 
-    function renderToday() {
+    function renderStats() {
       const todayStats = getTodayStats();
 
       return `
@@ -1560,26 +1672,32 @@
       `;
     }
 
-    function bindZikrRows() {
+    function bindMineActions() {
+      appEl.querySelectorAll(".category-card").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.currentCategory = button.dataset.category;
+          state.screen = "category";
+          render();
+          afterRenderTop();
+        });
+      });
+    }
+
+    function bindCategoryActions() {
       appEl.querySelectorAll(".zikr-row").forEach((button) => {
         button.addEventListener("click", () => {
           const zikr = getZikrById(button.dataset.zikrId);
           state.zikrId = zikr.id;
+          state.currentCategory = zikr.category || "daily";
           state.screen = "detail";
           render();
           afterRenderTop();
         });
       });
-
-      const openCreateFromMine = document.getElementById("openCreateFromMine");
-      if (openCreateFromMine) {
-        openCreateFromMine.addEventListener("click", openCreateDialog);
-      }
     }
 
-    function bindTodayActions() {
+    function bindStatsActions() {
       const openHabitJournalBtn = document.getElementById("openHabitJournalBtn");
-
       openHabitJournalBtn?.addEventListener("click", () => {
         state.screen = "habit";
         render();
