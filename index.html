@@ -7,37 +7,74 @@
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
   />
   <title>Мои зикры</title>
-  <meta name="theme-color" content="#edf1f6" />
+  <meta name="theme-color" content="#0b1830" />
   <script src="https://telegram.org/js/telegram-web-app.js?60"></script>
 
   <style>
+    :root {
+      --bg-top: #08111f;
+      --bg-mid: #0d2138;
+      --bg-bottom: #102743;
+
+      --gold: #e4c98d;
+      --gold-soft: rgba(228, 201, 141, 0.18);
+      --gold-line: rgba(228, 201, 141, 0.58);
+
+      --cyan: #67d5e3;
+      --cyan-soft: rgba(103, 213, 227, 0.18);
+
+      --panel: rgba(7, 18, 32, 0.76);
+      --panel-2: rgba(11, 26, 45, 0.78);
+      --panel-light: rgba(255, 249, 238, 0.96);
+      --panel-light-2: rgba(255, 246, 229, 0.9);
+
+      --text: #f7e8c6;
+      --text-soft: rgba(247, 232, 198, 0.78);
+      --dark-text: #172133;
+      --dark-soft: #5d6678;
+
+      --success: #27bf72;
+      --success-soft: rgba(39, 191, 114, 0.14);
+
+      --shadow: 0 16px 42px rgba(0, 0, 0, 0.28);
+      --blur: blur(14px);
+
+      --radius-xl: 30px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+    }
+
     html,
     body {
+      margin: 0;
+      min-height: 100%;
       overflow-anchor: none;
       touch-action: manipulation;
       overscroll-behavior: none;
-      margin: 0;
-      min-height: 100%;
-      background: #edf1f6;
-      color: #17171f;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% 10%, rgba(255, 214, 133, 0.18), transparent 18%),
+        radial-gradient(circle at 50% 28%, rgba(92, 214, 229, 0.10), transparent 24%),
+        linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 45%, var(--bg-bottom) 100%);
     }
 
-    :root {
-      --bg: #edf1f6;
-      --card: #ffffff;
-      --text: #17171f;
-      --muted: #6f7481;
-      --primary: #4a93d2;
-      --primary-soft: #dfeefd;
-      --line: #dde3ea;
-      --success: #1ea76b;
-      --success-soft: rgba(30, 167, 107, 0.12);
-      --danger: #c24848;
-      --shadow: 0 10px 24px rgba(13, 24, 42, 0.06);
-      --radius-xl: 28px;
-      --radius-lg: 22px;
-      --radius-md: 16px;
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.18;
+      background:
+        radial-gradient(circle at 50% 50%, transparent 0 32px, rgba(228, 201, 141, 0.55) 32px 34px, transparent 34px),
+        radial-gradient(circle at 0 0, transparent 0 24px, rgba(228, 201, 141, 0.4) 24px 26px, transparent 26px),
+        radial-gradient(circle at 100% 0, transparent 0 24px, rgba(228, 201, 141, 0.4) 24px 26px, transparent 26px),
+        radial-gradient(circle at 0 100%, transparent 0 24px, rgba(228, 201, 141, 0.4) 24px 26px, transparent 26px),
+        radial-gradient(circle at 100% 100%, transparent 0 24px, rgba(228, 201, 141, 0.4) 24px 26px, transparent 26px);
+      background-size: 220px 220px;
+      background-position: center;
+      mix-blend-mode: screen;
     }
 
     * {
@@ -53,9 +90,9 @@
     }
 
     button {
-      cursor: pointer;
       border: none;
       background: transparent;
+      cursor: pointer;
     }
 
     body {
@@ -64,51 +101,63 @@
     }
 
     .app-shell {
-      width: min(100%, 480px);
+      position: relative;
+      width: min(100%, 500px);
       min-height: 100vh;
-      padding: 18px 16px 92px;
+      padding: 16px 16px 104px;
+      z-index: 1;
     }
 
     .topbar {
       display: grid;
-      grid-template-columns: 56px 1fr 56px;
+      grid-template-columns: 58px 1fr 58px;
       gap: 10px;
       align-items: center;
       position: sticky;
       top: 0;
-      z-index: 20;
+      z-index: 30;
       padding: 10px 0 14px;
-      background: linear-gradient(to bottom, var(--bg) 78%, rgba(237, 241, 246, 0));
-    }
-
-    .search-pill {
-      min-height: 56px;
-      border-radius: 999px;
-      padding: 0 22px;
-      display: flex;
-      align-items: center;
-      font-size: 21px;
-      font-weight: 700;
-      background: rgba(255, 255, 255, 0.66);
+      background: linear-gradient(to bottom, rgba(8, 17, 31, 0.92) 64%, rgba(8, 17, 31, 0));
       backdrop-filter: blur(8px);
     }
 
     .icon-button {
-      width: 56px;
-      height: 56px;
+      width: 58px;
+      height: 58px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.66);
+      display: grid;
+      place-items: center;
+      color: var(--gold);
+      font-size: 28px;
+      background: rgba(255, 249, 238, 0.12);
+      border: 1px solid rgba(255, 249, 238, 0.18);
       box-shadow: var(--shadow);
-      font-size: 26px;
-      flex-shrink: 0;
+      backdrop-filter: var(--blur);
+    }
+
+    .icon-button:active {
+      transform: scale(0.98);
+    }
+
+    .search-pill {
+      min-height: 58px;
+      border-radius: 999px;
+      padding: 0 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--gold);
+      background: rgba(255, 248, 236, 0.14);
+      border: 1px solid rgba(255, 248, 236, 0.22);
+      box-shadow: var(--shadow);
+      backdrop-filter: var(--blur);
     }
 
     .hidden {
       visibility: hidden;
-    }
-
-    #app.with-detail-dock {
-      padding-bottom: 290px;
     }
 
     .screen {
@@ -117,115 +166,484 @@
       gap: 16px;
     }
 
-    .card {
-      background: var(--card);
-      border-radius: var(--radius-xl);
+    #app.with-detail-dock {
+      padding-bottom: 310px;
+    }
+
+    .hero-panel {
+      position: relative;
+      height: 300px;
+      margin-top: 2px;
+      margin-bottom: -120px;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .hero-glow {
+      position: absolute;
+      inset: 12px 20px 0;
+      border-radius: 34px;
+      background:
+        radial-gradient(circle at 50% 46%, rgba(255, 222, 153, 0.44), rgba(255, 222, 153, 0.08) 36%, transparent 58%);
+      filter: blur(18px);
+      opacity: 0.95;
+    }
+
+    .hero-arch {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 10px;
+      width: 78%;
+      height: 210px;
+      border: 2px solid var(--gold-line);
+      border-radius: 40px 40px 28px 28px;
+      box-shadow: inset 0 0 24px rgba(228, 201, 141, 0.12);
+    }
+
+    .hero-arch::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: -72px;
+      transform: translateX(-50%);
+      width: 55%;
+      height: 92px;
+      border: 2px solid var(--gold-line);
+      border-bottom: none;
+      border-radius: 160px 160px 0 0;
+    }
+
+    .hero-mosque {
+      position: absolute;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      width: 58%;
+      height: 160px;
+      opacity: 0.94;
+    }
+
+    .hero-mosque .base {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: 76%;
+      height: 58px;
+      background: linear-gradient(180deg, rgba(255, 228, 165, 0.88), rgba(255, 228, 165, 0.46));
+      border-radius: 10px 10px 0 0;
+      filter: drop-shadow(0 0 18px rgba(255, 218, 138, 0.28));
+    }
+
+    .hero-mosque .dome {
+      position: absolute;
+      left: 50%;
+      bottom: 44px;
+      transform: translateX(-50%);
+      width: 42%;
+      height: 82px;
+      background: linear-gradient(180deg, rgba(255, 235, 188, 0.92), rgba(255, 221, 150, 0.52));
+      border-radius: 120px 120px 16px 16px;
+      filter: drop-shadow(0 0 16px rgba(255, 218, 138, 0.2));
+    }
+
+    .hero-mosque .minaret {
+      position: absolute;
+      bottom: 38px;
+      width: 9%;
+      height: 108px;
+      background: linear-gradient(180deg, rgba(255, 235, 188, 0.9), rgba(255, 221, 150, 0.48));
+      border-radius: 999px 999px 0 0;
+    }
+
+    .hero-mosque .minaret.left {
+      left: 14%;
+    }
+
+    .hero-mosque .minaret.right {
+      right: 14%;
+    }
+
+    .hero-mosque .crescent {
+      position: absolute;
+      left: 50%;
+      bottom: 122px;
+      transform: translateX(-50%);
+      font-size: 28px;
+      color: rgba(255, 232, 182, 0.9);
+      text-shadow: 0 0 18px rgba(255, 218, 138, 0.24);
+    }
+
+    .category-stack {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .glass-card,
+    .list-row,
+    .category-card,
+    .stat-box,
+    .diary-open-btn,
+    .calendar-card {
+      background: linear-gradient(180deg, rgba(7, 20, 35, 0.78), rgba(9, 27, 46, 0.74));
+      border: 1.2px solid rgba(228, 201, 141, 0.52);
       box-shadow: var(--shadow);
-      padding: 22px;
+      backdrop-filter: blur(12px);
     }
 
     .category-card,
     .list-row {
+      width: 100%;
+      padding: 20px;
+      border-radius: var(--radius-xl);
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 14px;
-      padding: 20px;
-      border-radius: var(--radius-xl);
-      background: var(--card);
-      box-shadow: var(--shadow);
       text-align: left;
-      width: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .category-card::before,
+    .list-row::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 75% 20%, rgba(91, 214, 229, 0.13), transparent 24%),
+        radial-gradient(circle at 50% 55%, rgba(255, 214, 133, 0.12), transparent 40%);
+      pointer-events: none;
     }
 
     .category-card-main,
     .list-row-main {
+      position: relative;
+      z-index: 2;
       min-width: 0;
       flex: 1;
     }
 
     .category-card-title,
     .list-row-title {
-      font-size: 19px;
+      color: var(--gold);
+      font-size: 20px;
       font-weight: 800;
       margin-bottom: 8px;
-      color: var(--primary);
-    }
-
-    .category-card-sub,
-    .muted {
-      color: var(--muted);
     }
 
     .category-card-sub {
+      color: rgba(247, 232, 198, 0.92);
       font-size: 15px;
       line-height: 1.45;
+      margin-bottom: 6px;
+    }
+
+    .list-row-note {
+      color: var(--text-soft);
+      font-size: 14px;
+      line-height: 1.4;
+      margin-bottom: 6px;
+    }
+
+    .muted {
+      color: var(--text-soft);
     }
 
     .substat {
-      margin-top: 6px;
-      color: var(--primary);
+      color: var(--cyan);
       font-size: 14px;
       font-weight: 700;
     }
 
+    .category-badge,
     .count-badge,
-    .status-badge,
-    .category-badge {
-      min-width: 64px;
-      height: 54px;
+    .status-badge {
+      position: relative;
+      z-index: 2;
+      min-width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 18px;
+      font-weight: 900;
+      box-shadow: inset 0 0 24px rgba(255, 255, 255, 0.04);
+    }
+
+    .category-badge,
+    .count-badge {
+      background: radial-gradient(circle at 35% 30%, rgba(98, 217, 231, 0.34), rgba(34, 133, 160, 0.82));
+      color: #f6f7f8;
+      border: 1px solid rgba(103, 213, 227, 0.35);
+    }
+
+    .status-badge {
+      background: radial-gradient(circle at 35% 30%, rgba(58, 212, 122, 0.36), rgba(24, 145, 78, 0.88));
+      color: white;
+      border: 1px solid rgba(39, 191, 114, 0.46);
+    }
+
+    .section-hero-title {
+      padding: 0 8px;
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(228, 201, 141, 0.82);
+      text-align: center;
+    }
+
+    .reading-card {
+      background: linear-gradient(180deg, rgba(255, 251, 243, 0.97), rgba(255, 247, 232, 0.94));
+      border: 1px solid rgba(228, 201, 141, 0.48);
+      border-radius: 30px;
+      box-shadow: var(--shadow);
+      padding: 22px 22px 30px;
+      color: var(--dark-text);
+    }
+
+    .reading-topline {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .reading-chip {
+      min-height: 34px;
       padding: 0 14px;
       border-radius: 999px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      font-size: 13px;
       font-weight: 800;
-      flex-shrink: 0;
+      color: #7d6640;
+      background: rgba(228, 201, 141, 0.18);
+      border: 1px solid rgba(228, 201, 141, 0.28);
     }
 
-    .count-badge,
-    .category-badge {
-      background: var(--primary-soft);
-      color: var(--primary);
-    }
-
-    .status-badge.done {
-      min-width: 54px;
-      height: 54px;
-      background: rgba(30, 167, 107, 0.14);
-      color: var(--success);
-    }
-
-    .detail-header {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      padding-bottom: 26px;
+    .reading-title {
+      margin: 0 0 14px;
+      color: #2d3545;
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.3;
+      text-align: center;
     }
 
     .arabic {
       direction: rtl;
       text-align: center;
-      font-size: 30px;
-      line-height: 1.9;
-      margin: 0;
+      font-size: 31px;
+      line-height: 1.95;
+      margin: 0 0 18px;
       word-break: break-word;
+      color: #121927;
       font-weight: 700;
     }
 
     .transliteration {
-      color: var(--muted);
+      color: #425069;
       line-height: 1.8;
-      font-size: 17px;
-      font-weight: 700;
+      font-size: 18px;
+      font-weight: 800;
       word-break: break-word;
+      margin-bottom: 18px;
+      text-align: center;
     }
 
     .translation {
-      color: var(--muted);
+      color: #4e5a72;
       line-height: 1.8;
-      font-size: 17px;
+      font-size: 18px;
       word-break: break-word;
+      text-align: center;
+    }
+
+    .detail-dock {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 16px;
+      width: min(calc(100% - 24px), 468px);
+      z-index: 25;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease;
+    }
+
+    .detail-dock.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .detail-dock-card {
+      padding: 14px;
+      border-radius: 28px;
+      background: rgba(6, 18, 33, 0.9);
+      border: 1px solid rgba(228, 201, 141, 0.45);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .tap-panel {
+      width: 100%;
+      min-height: 168px;
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255, 216, 139, 0.08), transparent 26%),
+        radial-gradient(circle at 80% 80%, rgba(103, 213, 227, 0.1), transparent 24%),
+        linear-gradient(180deg, rgba(13, 35, 56, 0.94), rgba(9, 24, 40, 0.94));
+      border: 1px solid rgba(228, 201, 141, 0.22);
+      padding: 12px 14px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+    }
+
+    .tap-progress {
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(103, 213, 227, 0.14);
+      overflow: hidden;
+    }
+
+    .tap-progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #6bd9e6 0%, #25b6c9 100%);
+      width: 0%;
+      transition: width 0.18s ease;
+    }
+
+    .tap-count {
+      font-size: 64px;
+      line-height: 1;
+      font-weight: 500;
+      color: var(--gold);
+      margin-top: 4px;
+      text-shadow: 0 0 20px rgba(255, 214, 133, 0.12);
+    }
+
+    .tap-progress-text {
+      font-size: 20px;
+      font-weight: 800;
+      color: rgba(247, 232, 198, 0.92);
+      line-height: 1.15;
+      margin-top: -2px;
+    }
+
+    .tap-done {
+      min-height: 46px;
+      width: 100%;
+      padding: 0 14px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(180deg, rgba(48, 186, 111, 0.98), rgba(29, 153, 83, 0.98));
+      color: white;
+      font-size: 17px;
+      font-weight: 900;
+      box-shadow: 0 10px 24px rgba(29, 153, 83, 0.28);
+    }
+
+    .tap-hint {
+      color: rgba(247, 232, 198, 0.7);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .dock-footer {
+      display: grid;
+      grid-template-columns: 48px 1fr 48px;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .arrow-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(255, 248, 236, 0.12);
+      border: 1px solid rgba(255, 248, 236, 0.18);
+      color: var(--gold);
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    .arrow-btn:disabled {
+      opacity: 0.4;
+    }
+
+    .dock-btn {
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(103, 213, 227, 0.16), rgba(103, 213, 227, 0.08));
+      border: 1px solid rgba(103, 213, 227, 0.24);
+      color: var(--cyan);
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      left: 50%;
+      bottom: 14px;
+      transform: translateX(-50%);
+      width: min(calc(100% - 24px), 468px);
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      padding: 10px;
+      border-radius: 24px;
+      background: rgba(8, 20, 34, 0.82);
+      border: 1px solid rgba(228, 201, 141, 0.36);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      z-index: 35;
+      transition: opacity 0.18s ease, visibility 0.18s ease, transform 0.18s ease;
+    }
+
+    .bottom-nav.hidden-in-subscreen {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateX(-50%) translateY(20px);
+    }
+
+    .nav-btn {
+      min-height: 54px;
+      border-radius: 18px;
+      font-weight: 800;
+      font-size: 18px;
+      color: rgba(247, 232, 198, 0.74);
+      position: relative;
+    }
+
+    .nav-btn.active {
+      color: var(--cyan);
+      background:
+        radial-gradient(circle at 25% 30%, rgba(103, 213, 227, 0.18), transparent 34%),
+        linear-gradient(180deg, rgba(103, 213, 227, 0.14), rgba(103, 213, 227, 0.06));
+      border: 1px solid rgba(103, 213, 227, 0.18);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
     }
 
     .stat-grid {
@@ -235,66 +653,59 @@
     }
 
     .stat-box {
-      background: var(--card);
-      box-shadow: var(--shadow);
-      border-radius: 22px;
+      min-height: 128px;
+      border-radius: 24px;
       padding: 18px;
       position: relative;
       overflow: hidden;
-      min-height: 120px;
     }
 
     .stat-box strong {
-      display: block;
-      font-size: 34px;
-      line-height: 1;
-      margin-bottom: 10px;
       position: relative;
       z-index: 2;
+      display: block;
+      margin-bottom: 10px;
+      font-size: 34px;
+      line-height: 1;
+      color: var(--gold);
     }
 
     .stat-box span {
       position: relative;
       z-index: 2;
-      color: var(--muted);
+      color: var(--text-soft);
       font-size: 15px;
-      line-height: 1.35;
-    }
-
-    .progress-stat {
-      border: 1px solid rgba(30, 167, 107, 0.12);
+      line-height: 1.4;
     }
 
     .progress-stat strong {
-      color: var(--success);
+      color: #66d76d;
     }
 
     .progress-track {
-      width: 100%;
-      height: 10px;
-      background: rgba(30, 167, 107, 0.09);
-      border-radius: 999px;
-      margin-top: 12px;
-      overflow: hidden;
       position: relative;
       z-index: 2;
+      width: 100%;
+      height: 10px;
+      margin-top: 14px;
+      border-radius: 999px;
+      background: rgba(39, 191, 114, 0.12);
+      overflow: hidden;
     }
 
     .progress-fill-green {
       height: 100%;
-      background: linear-gradient(90deg, #1ea76b 0%, #35c885 100%);
-      border-radius: 999px;
       width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #24c86f 0%, #7fe08a 100%);
       transition: width 0.2s ease;
     }
 
     .diary-open-btn {
       width: 100%;
       text-align: left;
-      background: var(--card);
-      box-shadow: var(--shadow);
-      border-radius: 24px;
-      padding: 20px;
+      border-radius: 28px;
+      padding: 22px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -303,29 +714,35 @@
 
     .diary-open-title {
       font-size: 28px;
-      font-weight: 800;
+      font-weight: 900;
+      color: var(--gold);
       margin-bottom: 8px;
     }
 
     .diary-open-subtitle {
-      color: var(--muted);
-      line-height: 1.45;
+      color: var(--text-soft);
+      line-height: 1.5;
       font-size: 16px;
       max-width: 280px;
     }
 
     .diary-open-icon {
-      width: 58px;
-      height: 58px;
+      width: 60px;
+      height: 60px;
       border-radius: 18px;
-      background: var(--primary-soft);
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: grid;
+      place-items: center;
+      background: rgba(255, 248, 236, 0.12);
+      border: 1px solid rgba(255, 248, 236, 0.18);
+      color: var(--gold);
       font-size: 28px;
-      font-weight: 800;
+      font-weight: 900;
       flex-shrink: 0;
+    }
+
+    .calendar-card {
+      border-radius: 28px;
+      padding: 22px;
     }
 
     .calendar-head {
@@ -336,28 +753,48 @@
       margin-bottom: 14px;
     }
 
+    .calendar-title {
+      margin: 0 0 8px;
+      color: var(--gold);
+      font-size: 26px;
+      font-weight: 900;
+    }
+
     .calendar-nav {
       display: flex;
       gap: 8px;
     }
 
     .month-switch {
-      min-height: 42px;
-      padding: 0 14px;
+      min-height: 44px;
+      min-width: 44px;
+      border-radius: 14px;
+      background: rgba(255, 248, 236, 0.12);
+      border: 1px solid rgba(255, 248, 236, 0.18);
+      color: var(--gold);
+      font-weight: 900;
+      font-size: 22px;
     }
 
     .mini-stats-row {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
 
     .mini-stat {
-      background: #f7f9fc;
+      min-height: 40px;
+      padding: 0 14px;
       border-radius: 999px;
-      padding: 10px 14px;
-      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 248, 236, 0.1);
+      border: 1px solid rgba(255, 248, 236, 0.12);
+      color: var(--text-soft);
+      font-size: 14px;
+      font-weight: 700;
     }
 
     .calendar-weekdays,
@@ -373,20 +810,22 @@
 
     .weekday-cell {
       text-align: center;
-      color: var(--muted);
+      color: rgba(247, 232, 198, 0.78);
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 800;
     }
 
     .calendar-cell {
-      min-height: 68px;
+      min-height: 70px;
       border-radius: 18px;
       padding: 10px 6px;
-      background: #f8fafc;
+      background: rgba(255, 250, 240, 0.9);
+      color: #1e2736;
       text-align: center;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      box-shadow: inset 0 0 0 1px rgba(228, 201, 141, 0.2);
     }
 
     .calendar-cell.empty {
@@ -395,219 +834,31 @@
     }
 
     .calendar-cell.today {
-      outline: 2px solid rgba(74, 147, 210, 0.22);
+      outline: 2px solid rgba(103, 213, 227, 0.7);
+      outline-offset: 0;
     }
 
     .calendar-cell.active {
-      background: #eef6ff;
+      background: rgba(215, 241, 245, 0.95);
     }
 
     .calendar-cell.done {
-      background: rgba(30, 167, 107, 0.12);
+      background: rgba(206, 246, 220, 0.96);
     }
 
     .calendar-day {
-      font-weight: 800;
+      font-weight: 900;
+      font-size: 18px;
     }
 
     .calendar-mark {
-      color: var(--muted);
+      color: #596274;
       font-size: 14px;
-      font-weight: 700;
-    }
-
-    .bottom-nav {
-      position: fixed;
-      bottom: 14px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: min(calc(100% - 24px), 452px);
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      padding: 10px;
-      border-radius: 24px;
-      background: rgba(255, 255, 255, 0.82);
-      backdrop-filter: blur(10px);
-      box-shadow: var(--shadow);
-      z-index: 30;
-      transition: opacity 0.18s ease, visibility 0.18s ease, transform 0.18s ease;
-    }
-
-    .bottom-nav.hidden-in-subscreen {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      transform: translateX(-50%) translateY(20px);
-    }
-
-    .nav-btn {
-      min-height: 50px;
-      border-radius: 16px;
-      color: var(--muted);
-      font-weight: 700;
-    }
-
-    .nav-btn.active {
-      background: var(--primary-soft);
-      color: var(--primary);
-    }
-
-    .detail-dock {
-      position: fixed;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: 16px;
-      width: min(calc(100% - 24px), 452px);
-      z-index: 25;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.18s ease;
-    }
-
-    .detail-dock.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .detail-dock-card {
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(10px);
-      border-radius: 28px;
-      box-shadow: var(--shadow);
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .tap-panel {
-      width: 100%;
-      min-height: 160px;
-      border-radius: 24px;
-      background: linear-gradient(180deg, #ffffff 0%, #f9fbfe 100%);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.65);
-      padding: 12px 14px 14px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-      text-align: center;
-    }
-
-    .tap-progress {
-      width: 100%;
-      height: 6px;
-      border-radius: 999px;
-      background: rgba(74, 147, 210, 0.14);
-      overflow: hidden;
-    }
-
-    .tap-progress-fill {
-      height: 100%;
-      border-radius: 999px;
-      background: var(--primary);
-      width: 0%;
-      transition: width 0.18s ease;
-    }
-
-    .tap-count {
-      font-size: 62px;
-      line-height: 1;
-      font-weight: 500;
-      color: var(--text);
-      margin-top: 2px;
-    }
-
-    .tap-progress-text {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--muted);
-      line-height: 1.15;
-      margin-top: -4px;
-    }
-
-    .tap-done {
-      min-height: 46px;
-      border-radius: 16px;
-      display: grid;
-      place-items: center;
-      background: var(--primary);
-      color: white;
-      font-size: 17px;
       font-weight: 800;
-      padding: 0 14px;
-      width: 100%;
-    }
-
-    .tap-hint {
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    .dock-footer {
-      display: grid;
-      grid-template-columns: 46px 1fr 46px;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .arrow-btn {
-      width: 46px;
-      height: 46px;
-      border-radius: 50%;
-      background: var(--primary-soft);
-      color: var(--primary);
-      font-size: 22px;
-      font-weight: 800;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .arrow-btn:disabled {
-      opacity: 0.45;
-    }
-
-    .primary-button,
-    .secondary-button,
-    .ghost-button,
-    .danger-button {
-      min-height: 52px;
-      padding: 0 20px;
-      border-radius: 16px;
-      font-weight: 700;
-    }
-
-    .primary-button {
-      background: var(--primary);
-      color: white;
-    }
-
-    .secondary-button {
-      background: var(--primary-soft);
-      color: var(--primary);
-    }
-
-    .ghost-button {
-      background: rgba(23, 23, 31, 0.06);
-      color: var(--text);
-    }
-
-    .danger-button {
-      background: rgba(194, 72, 72, 0.1);
-      color: var(--danger);
-    }
-
-    .dock-btn {
-      min-height: 46px;
-      padding: 0 12px;
-      font-size: 17px;
     }
 
     .modal {
-      width: min(100% - 24px, 520px);
+      width: min(100% - 24px, 540px);
       border: none;
       padding: 0;
       border-radius: 28px;
@@ -615,16 +866,20 @@
     }
 
     .modal::backdrop {
-      background: rgba(12, 19, 28, 0.4);
+      background: rgba(3, 8, 15, 0.66);
+      backdrop-filter: blur(6px);
     }
 
     .modal-card {
       padding: 22px;
-      background: white;
+      background: linear-gradient(180deg, rgba(255, 252, 245, 0.98), rgba(255, 245, 227, 0.98));
+      color: var(--dark-text);
       border-radius: 28px;
       display: flex;
       flex-direction: column;
       gap: 14px;
+      border: 1px solid rgba(228, 201, 141, 0.34);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.36);
     }
 
     .modal-head {
@@ -636,32 +891,85 @@
 
     .modal-head h3 {
       margin: 0;
+      font-size: 22px;
+      color: #2a3343;
     }
 
     label {
       display: flex;
       flex-direction: column;
       gap: 8px;
-      font-weight: 600;
+      font-weight: 700;
+      color: #394354;
     }
 
     input,
     textarea,
     select {
       width: 100%;
-      border: 1px solid var(--line);
+      border: 1px solid rgba(125, 136, 154, 0.22);
       border-radius: 16px;
       padding: 14px 16px;
-      background: #f8fafc;
+      background: rgba(250, 252, 255, 0.92);
+      color: #1b2434;
+      resize: vertical;
+      outline: none;
     }
 
-    .empty-state {
-      text-align: center;
-      padding: 32px 22px;
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: rgba(103, 213, 227, 0.8);
+      box-shadow: 0 0 0 4px rgba(103, 213, 227, 0.12);
     }
 
-    .empty-state h3 {
-      margin: 0 0 8px;
+    .primary-button,
+    .secondary-button,
+    .ghost-button,
+    .danger-button {
+      min-height: 52px;
+      padding: 0 20px;
+      border-radius: 16px;
+      font-weight: 800;
+      font-size: 16px;
+    }
+
+    .primary-button {
+      background: linear-gradient(180deg, rgba(28, 156, 183, 1), rgba(17, 124, 147, 1));
+      color: white;
+      box-shadow: 0 10px 24px rgba(17, 124, 147, 0.22);
+    }
+
+    .secondary-button {
+      background: rgba(103, 213, 227, 0.14);
+      color: #176d78;
+      border: 1px solid rgba(103, 213, 227, 0.22);
+    }
+
+    .ghost-button {
+      background: rgba(37, 47, 64, 0.08);
+      color: #293346;
+    }
+
+    .danger-button {
+      background: rgba(194, 72, 72, 0.1);
+      color: #b44646;
+    }
+
+    .manage-total {
+      background: rgba(249, 252, 255, 0.82);
+      border-radius: 18px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      color: #3a4658;
+    }
+
+    .manage-total strong {
+      font-size: 24px;
+      color: #202836;
     }
 
     .manage-actions {
@@ -670,63 +978,94 @@
       gap: 10px;
     }
 
-    .manage-total {
-      background: #f8fafc;
-      border-radius: 18px;
-      padding: 14px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
+    .empty-state {
+      text-align: center;
+      padding: 34px 24px;
+      border-radius: 28px;
+      background: linear-gradient(180deg, rgba(7, 20, 35, 0.78), rgba(9, 27, 46, 0.74));
+      border: 1.2px solid rgba(228, 201, 141, 0.52);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
     }
 
-    .manage-total strong {
-      font-size: 24px;
+    .empty-state h3 {
+      margin: 0 0 10px;
+      color: var(--gold);
+      font-size: 22px;
     }
 
-    @media (max-width: 390px) {
+    .empty-state p {
+      margin: 0;
+      color: var(--text-soft);
+      line-height: 1.6;
+    }
+
+    @media (max-width: 420px) {
+      .app-shell {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
       .search-pill {
-        font-size: 18px;
+        font-size: 19px;
+        padding: 0 16px;
       }
 
       .stat-grid {
         grid-template-columns: 1fr;
       }
 
-      .arabic {
-        font-size: 26px;
+      .diary-open-title {
+        font-size: 24px;
       }
 
-      .calendar-cell {
-        min-height: 58px;
-        padding: 8px 4px;
+      .category-card-title,
+      .list-row-title {
+        font-size: 18px;
       }
 
-      .calendar-mark {
-        font-size: 12px;
+      .category-badge,
+      .count-badge,
+      .status-badge {
+        min-width: 62px;
+        height: 62px;
       }
 
       .tap-count {
         font-size: 54px;
       }
 
-      .tap-panel {
-        min-height: 150px;
+      .arabic {
+        font-size: 27px;
+      }
+
+      .transliteration,
+      .translation {
+        font-size: 17px;
+      }
+
+      .calendar-cell {
+        min-height: 60px;
       }
 
       #app.with-detail-dock {
-        padding-bottom: 280px;
+        padding-bottom: 298px;
       }
 
-      .diary-open-title {
-        font-size: 24px;
+      .hero-panel {
+        height: 270px;
+        margin-bottom: -104px;
       }
 
-      .count-badge,
-      .category-badge,
-      .status-badge.done {
-        min-width: 56px;
-        height: 50px;
+      .hero-arch {
+        width: 84%;
+        height: 190px;
+      }
+
+      .hero-arch::before {
+        width: 58%;
+        top: -62px;
+        height: 80px;
       }
     }
   </style>
@@ -767,8 +1106,8 @@
       </label>
 
       <label>
-        Подпись / заметка
-        <input name="title" type="text" placeholder="Например: Утренний зикр или короткая заметка" />
+        Название
+        <input name="title" type="text" placeholder="Например: Зикр после намаза" />
       </label>
 
       <label>
@@ -778,7 +1117,7 @@
 
       <label>
         Транскрипция
-        <textarea name="transliteration" rows="3" placeholder="Как читается"></textarea>
+        <textarea name="transliteration" rows="4" placeholder="Как читается"></textarea>
       </label>
 
       <label>
@@ -787,7 +1126,7 @@
       </label>
 
       <label>
-        Количество повторений в день
+        Количество повторений
         <input name="target" type="number" min="1" step="1" value="33" required />
       </label>
 
@@ -803,7 +1142,7 @@
       </div>
 
       <div class="manage-total">
-        <span class="muted">Всего прочитано</span>
+        <span>Всего прочитано</span>
         <strong id="manageTotalValue">0</strong>
       </div>
 
@@ -835,12 +1174,12 @@
       lastTouchEnd = now;
     }, { passive: false });
 
-    const STORAGE_KEY = "zikr-miniapp-state-v18";
+    const STORAGE_KEY = "zikr-miniapp-state-v20";
 
     const CATEGORY_META = {
-      morning: { title: "Утренние зикры" },
-      evening: { title: "Вечерние зикры" },
-      daily: { title: "Повседневные зикры" }
+      morning: { title: "Утренние зикры", icon: "☀" },
+      evening: { title: "Вечерние зикры", icon: "☾" },
+      daily: { title: "Повседневные зикры", icon: "✦" }
     };
 
     const MORNING_ZIKRS = [
@@ -944,6 +1283,8 @@
       }
     ];
 
+    const EVENING_ZIKRS = MORNING_ZIKRS.map((item) => ({ ...item }));
+
     const DAILY_ZIKRS = [
       {
         title: "Повседневный зикр 1",
@@ -1024,7 +1365,7 @@
           category: "morning",
           ...item
         })),
-        ...MORNING_ZIKRS.map((item, index) => ({
+        ...EVENING_ZIKRS.map((item, index) => ({
           id: `seed-evening-${index + 1}`,
           category: "evening",
           ...item
@@ -1067,26 +1408,7 @@
 
     attachEvents();
     render();
-
-    function scrollToTopNow() {
-      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
-      appEl.scrollTop = 0;
-    }
-
-    function forceTop() {
-      scrollToTopNow();
-      requestAnimationFrame(scrollToTopNow);
-      setTimeout(scrollToTopNow, 0);
-      setTimeout(scrollToTopNow, 80);
-      setTimeout(scrollToTopNow, 180);
-      setTimeout(scrollToTopNow, 320);
-    }
-
-    function afterRenderTop() {
-      setTimeout(forceTop, 0);
-    }
+    forceTop();
 
     function loadData() {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -1118,6 +1440,26 @@
       );
     }
 
+    function scrollToTopNow() {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      appEl.scrollTop = 0;
+    }
+
+    function forceTop() {
+      scrollToTopNow();
+      requestAnimationFrame(scrollToTopNow);
+      setTimeout(scrollToTopNow, 0);
+      setTimeout(scrollToTopNow, 80);
+      setTimeout(scrollToTopNow, 180);
+      setTimeout(scrollToTopNow, 320);
+    }
+
+    function afterRenderTop() {
+      setTimeout(forceTop, 0);
+    }
+
     function attachEvents() {
       backButtonEl.addEventListener("click", handleBack);
 
@@ -1125,36 +1467,20 @@
         openCreateDialog(state.screen === "category" ? state.currentCategory : "daily");
       });
 
-      closeDialogEl.addEventListener("click", () => {
-        dialogEl.close();
+      closeDialogEl.addEventListener("click", () => dialogEl.close());
+      closeManageDialogEl.addEventListener("click", () => manageDialogEl.close());
+
+      dialogEl.addEventListener("click", (e) => {
+        if (e.target === dialogEl) dialogEl.close();
       });
 
-      closeManageDialogEl.addEventListener("click", () => {
-        manageDialogEl.close();
-      });
-
-      dialogEl.addEventListener("click", (event) => {
-        const rect = dialogEl.getBoundingClientRect();
-        const inDialog =
-          rect.top <= event.clientY &&
-          event.clientY <= rect.top + rect.height &&
-          rect.left <= event.clientX &&
-          event.clientX <= rect.left + rect.width;
-        if (!inDialog) dialogEl.close();
-      });
-
-      manageDialogEl.addEventListener("click", (event) => {
-        const rect = manageDialogEl.getBoundingClientRect();
-        const inDialog =
-          rect.top <= event.clientY &&
-          event.clientY <= rect.top + rect.height &&
-          rect.left <= event.clientX &&
-          rect.left + rect.width >= event.clientX;
-        if (!inDialog) manageDialogEl.close();
+      manageDialogEl.addEventListener("click", (e) => {
+        if (e.target === manageDialogEl) manageDialogEl.close();
       });
 
       zikrFormEl.addEventListener("submit", (event) => {
         event.preventDefault();
+
         const formData = new FormData(zikrFormEl);
         const existingId = String(formData.get("id") || "").trim();
         const target = Math.max(1, Number(formData.get("target")) || 1);
@@ -1308,7 +1634,8 @@
       const confirmed = window.confirm("Удалить этот зикр?");
       if (!confirmed) return;
 
-      const deleted = getZikrById(state.zikrId);
+      const current = getZikrById(state.zikrId);
+
       state.data.customZikrs = state.data.customZikrs.filter((item) => item.id !== state.zikrId);
       Object.values(state.data.progressByDate).forEach((dayProgress) => {
         delete dayProgress[state.zikrId];
@@ -1316,11 +1643,64 @@
 
       saveData();
 
-      const remainingInCategory = getAllZikrs(deleted?.category || state.currentCategory);
-      if (state.screen === "detail") {
-        state.screen = remainingInCategory.length ? "category" : "mine";
-      }
+      const remaining = getAllZikrs(current?.category || state.currentCategory);
       state.zikrId = null;
+      state.screen = remaining.length ? "category" : "mine";
+      render();
+      afterRenderTop();
+    }
+
+    function openCreateDialog(category = "daily") {
+      zikrFormEl.reset();
+      dialogTitleEl.textContent = "Добавить зикр";
+      submitDialogButtonEl.textContent = "Сохранить";
+      zikrFormEl.elements.id.value = "";
+      zikrFormEl.elements.category.value = category;
+      zikrFormEl.elements.target.value = 100;
+      dialogEl.showModal();
+    }
+
+    function openEditDialog(zikrId) {
+      const zikr = getZikrById(zikrId);
+      if (!zikr) return;
+
+      dialogTitleEl.textContent = "Редактировать зикр";
+      submitDialogButtonEl.textContent = "Сохранить изменения";
+      zikrFormEl.elements.id.value = zikr.id;
+      zikrFormEl.elements.category.value = zikr.category || "daily";
+      zikrFormEl.elements.title.value = zikr.title || "";
+      zikrFormEl.elements.arabic.value = zikr.arabic || "";
+      zikrFormEl.elements.transliteration.value = zikr.transliteration || "";
+      zikrFormEl.elements.translation.value = zikr.translation || "";
+      zikrFormEl.elements.target.value = zikr.target || 100;
+      dialogEl.showModal();
+    }
+
+    function openManageDialog() {
+      const zikr = getZikrById(state.zikrId);
+      if (!zikr) return;
+
+      manageTitleEl.textContent = `Управление — ${getDisplayLabel(zikr.id)}`;
+      manageTotalValueEl.textContent = getAllTimeCount(zikr.id);
+      manageDialogEl.showModal();
+    }
+
+    function goToPrevZikr() {
+      const items = getAllZikrs(state.currentCategory);
+      if (!items.length || !state.zikrId) return;
+      const currentIndex = items.findIndex((item) => item.id === state.zikrId);
+      const prevIndex = currentIndex > 0 ? currentIndex - 1 : items.length - 1;
+      state.zikrId = items[prevIndex].id;
+      render();
+      afterRenderTop();
+    }
+
+    function goToNextZikr() {
+      const items = getAllZikrs(state.currentCategory);
+      if (!items.length || !state.zikrId) return;
+      const currentIndex = items.findIndex((item) => item.id === state.zikrId);
+      const nextIndex = currentIndex >= 0 ? (currentIndex + 1) % items.length : 0;
+      state.zikrId = items[nextIndex].id;
       render();
       afterRenderTop();
     }
@@ -1342,6 +1722,7 @@
       const completed = items.filter((item) => isDone(item.id)).length;
       const totalToday = items.reduce((sum, item) => sum + getCount(item.id), 0);
       const allTimeTotal = items.reduce((sum, item) => sum + getAllTimeCount(item.id), 0);
+
       return {
         total: items.length,
         completed,
@@ -1355,6 +1736,7 @@
       const zikrs = getAllZikrs();
       const completed = zikrs.filter((item) => isDone(item.id, dateKey)).length;
       const totalRepeats = getDayTotal(dateKey);
+
       return {
         total: zikrs.length,
         completed,
@@ -1434,61 +1816,6 @@
       });
 
       return { activeDays, doneDays };
-    }
-
-    function openCreateDialog(category = "daily") {
-      zikrFormEl.reset();
-      dialogTitleEl.textContent = "Добавить зикр";
-      submitDialogButtonEl.textContent = "Сохранить";
-      zikrFormEl.elements.id.value = "";
-      zikrFormEl.elements.category.value = category;
-      zikrFormEl.elements.target.value = 100;
-      dialogEl.showModal();
-    }
-
-    function openEditDialog(zikrId) {
-      const zikr = getZikrById(zikrId);
-      if (!zikr) return;
-
-      dialogTitleEl.textContent = "Редактировать зикр";
-      submitDialogButtonEl.textContent = "Сохранить изменения";
-      zikrFormEl.elements.id.value = zikr.id;
-      zikrFormEl.elements.category.value = zikr.category || "daily";
-      zikrFormEl.elements.title.value = zikr.title || "";
-      zikrFormEl.elements.arabic.value = zikr.arabic || "";
-      zikrFormEl.elements.transliteration.value = zikr.transliteration || "";
-      zikrFormEl.elements.translation.value = zikr.translation || "";
-      zikrFormEl.elements.target.value = zikr.target || 100;
-      dialogEl.showModal();
-    }
-
-    function openManageDialog() {
-      const zikr = getZikrById(state.zikrId);
-      if (!zikr) return;
-
-      manageTitleEl.textContent = `Управление — ${getDisplayLabel(zikr.id)}`;
-      manageTotalValueEl.textContent = getAllTimeCount(zikr.id);
-      manageDialogEl.showModal();
-    }
-
-    function goToPrevZikr() {
-      const items = getAllZikrs(state.currentCategory);
-      if (!items.length || !state.zikrId) return;
-      const currentIndex = items.findIndex((item) => item.id === state.zikrId);
-      const prevIndex = currentIndex > 0 ? currentIndex - 1 : items.length - 1;
-      state.zikrId = items[prevIndex].id;
-      render();
-      afterRenderTop();
-    }
-
-    function goToNextZikr() {
-      const items = getAllZikrs(state.currentCategory);
-      if (!items.length || !state.zikrId) return;
-      const currentIndex = items.findIndex((item) => item.id === state.zikrId);
-      const nextIndex = currentIndex >= 0 ? (currentIndex + 1) % items.length : 0;
-      state.zikrId = items[nextIndex].id;
-      render();
-      afterRenderTop();
     }
 
     function handleBack() {
@@ -1572,6 +1899,30 @@
       bindMineActions();
     }
 
+    function renderMine() {
+      return `
+        <section class="screen">
+          <div class="hero-panel">
+            <div class="hero-glow"></div>
+            <div class="hero-arch"></div>
+            <div class="hero-mosque">
+              <div class="base"></div>
+              <div class="dome"></div>
+              <div class="minaret left"></div>
+              <div class="minaret right"></div>
+              <div class="crescent">☾</div>
+            </div>
+          </div>
+
+          <div class="category-stack">
+            ${renderCategoryCard("morning")}
+            ${renderCategoryCard("evening")}
+            ${renderCategoryCard("daily")}
+          </div>
+        </section>
+      `;
+    }
+
     function renderCategoryCard(category) {
       const meta = CATEGORY_META[category];
       const stats = getCategoryStats(category);
@@ -1588,6 +1939,39 @@
       `;
     }
 
+    function renderCategory(category) {
+      const meta = CATEGORY_META[category];
+      const items = getAllZikrs(category);
+      const stats = getCategoryStats(category);
+
+      if (!items.length) {
+        return `
+          <section class="screen">
+            <div class="empty-state">
+              <h3>В разделе пока нет зикров</h3>
+              <p>Нажмите плюс сверху, чтобы добавить новый зикр в раздел «${meta.title}».</p>
+            </div>
+          </section>
+        `;
+      }
+
+      return `
+        <section class="screen">
+          <div class="glass-card" style="padding:20px; border-radius:28px;">
+            <div class="section-hero-title">${meta.title}</div>
+            <div style="margin-top:10px; text-align:center; color:var(--gold); font-size:30px; font-weight:900;">
+              ${stats.completed}/${stats.total}
+            </div>
+            <div style="margin-top:6px; text-align:center;" class="muted">
+              Выполнено сегодня
+            </div>
+          </div>
+
+          ${items.map((zikr) => renderZikrRow(zikr)).join("")}
+        </section>
+      `;
+    }
+
     function renderZikrRow(zikr) {
       const todayCount = getCount(zikr.id);
       const allTimeCount = getAllTimeCount(zikr.id);
@@ -1596,44 +1980,16 @@
         <button class="list-row zikr-row" data-zikr-id="${zikr.id}">
           <div class="list-row-main">
             <div class="list-row-title">${getDisplayLabel(zikr.id)}</div>
+            <div class="list-row-note">${zikr.title || ""}</div>
             <div class="muted">Сегодня ${todayCount} / ${zikr.target}</div>
             <div class="substat">Всего прочитано: ${allTimeCount}</div>
           </div>
-          ${isDone(zikr.id)
-            ? '<span class="status-badge done">✅</span>'
-            : `<span class="count-badge">${zikr.target}</span>`}
+          ${
+            isDone(zikr.id)
+              ? '<span class="status-badge">✓</span>'
+              : `<span class="count-badge">${zikr.target}</span>`
+          }
         </button>
-      `;
-    }
-
-    function renderMine() {
-      return `
-        <section class="screen">
-          ${renderCategoryCard("morning")}
-          ${renderCategoryCard("evening")}
-          ${renderCategoryCard("daily")}
-        </section>
-      `;
-    }
-
-    function renderCategory(category) {
-      const items = getAllZikrs(category);
-
-      if (!items.length) {
-        return `
-          <section class="screen">
-            <div class="card empty-state">
-              <h3>В этом разделе пока нет зикров</h3>
-              <div class="muted">Нажмите плюс сверху, чтобы добавить новый зикр.</div>
-            </div>
-          </section>
-        `;
-      }
-
-      return `
-        <section class="screen">
-          ${items.map((zikr) => renderZikrRow(zikr)).join("")}
-        </section>
       `;
     }
 
@@ -1642,8 +1998,9 @@
       if (!zikr) {
         return `
           <section class="screen">
-            <div class="card empty-state">
+            <div class="empty-state">
               <h3>Зикр не найден</h3>
+              <p>Вернитесь назад и попробуйте открыть заново.</p>
             </div>
           </section>
         `;
@@ -1651,7 +2008,14 @@
 
       return `
         <section class="screen">
-          <div class="card detail-header">
+          <div class="reading-card">
+            <div class="reading-topline">
+              <span class="reading-chip">${CATEGORY_META[zikr.category || "daily"].title}</span>
+              <span class="reading-chip">${getDisplayLabel(zikr.id)}</span>
+            </div>
+
+            <h3 class="reading-title">${zikr.title || getDisplayLabel(zikr.id)}</h3>
+
             ${zikr.arabic ? `<div class="arabic">${zikr.arabic}</div>` : ""}
             ${zikr.transliteration ? `<div class="transliteration">${zikr.transliteration}</div>` : ""}
             ${zikr.translation ? `<div class="translation">${zikr.translation}</div>` : ""}
@@ -1689,7 +2053,7 @@
 
           <div class="dock-footer">
             <button class="arrow-btn" id="prevZikrBtn" ${hasMany ? "" : "disabled"}>‹</button>
-            <button class="secondary-button dock-btn" id="manageBtn">Опции</button>
+            <button class="dock-btn" id="manageBtn">Опции</button>
             <button class="arrow-btn" id="nextZikrBtn" ${hasMany ? "" : "disabled"}>›</button>
           </div>
         </div>
@@ -1739,15 +2103,16 @@
 
       return `
         <section class="screen">
-          <div class="card">
+          <div class="calendar-card">
             <div class="calendar-head">
               <div>
-                <h3 style="margin:0; text-transform: capitalize;">Дневник привычек</h3>
+                <h3 class="calendar-title">Дневник привычек</h3>
                 <div class="muted">День закрывается, когда выполнены все добавленные ежедневные зикры.</div>
               </div>
+
               <div class="calendar-nav">
-                <button class="ghost-button month-switch" id="prevMonthBtn">←</button>
-                <button class="ghost-button month-switch" id="nextMonthBtn">→</button>
+                <button class="month-switch" id="prevMonthBtn">←</button>
+                <button class="month-switch" id="nextMonthBtn">→</button>
               </div>
             </div>
 
@@ -1802,6 +2167,29 @@
       });
     }
 
+    function bindDetailActions() {
+      const incrementPanelBtn = document.getElementById("incrementPanelBtn");
+      const manageBtn = document.getElementById("manageBtn");
+      const prevZikrBtn = document.getElementById("prevZikrBtn");
+      const nextZikrBtn = document.getElementById("nextZikrBtn");
+
+      incrementPanelBtn?.addEventListener("click", () => {
+        incrementZikr(state.zikrId);
+      });
+
+      manageBtn?.addEventListener("click", () => {
+        openManageDialog();
+      });
+
+      prevZikrBtn?.addEventListener("click", () => {
+        goToPrevZikr();
+      });
+
+      nextZikrBtn?.addEventListener("click", () => {
+        goToNextZikr();
+      });
+    }
+
     function bindStatsActions() {
       const openHabitJournalBtn = document.getElementById("openHabitJournalBtn");
       openHabitJournalBtn?.addEventListener("click", () => {
@@ -1827,31 +2215,6 @@
         afterRenderTop();
       });
     }
-
-    function bindDetailActions() {
-      const incrementPanelBtn = document.getElementById("incrementPanelBtn");
-      const manageBtn = document.getElementById("manageBtn");
-      const prevZikrBtn = document.getElementById("prevZikrBtn");
-      const nextZikrBtn = document.getElementById("nextZikrBtn");
-
-      incrementPanelBtn?.addEventListener("click", () => {
-        incrementZikr(state.zikrId);
-      });
-
-      manageBtn?.addEventListener("click", () => {
-        openManageDialog();
-      });
-
-      prevZikrBtn?.addEventListener("click", () => {
-        goToPrevZikr();
-      });
-
-      nextZikrBtn?.addEventListener("click", () => {
-        goToNextZikr();
-      });
-    }
-
-    forceTop();
   </script>
 </body>
 </html>
