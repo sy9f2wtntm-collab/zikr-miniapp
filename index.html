@@ -26,7 +26,6 @@
       --panel: rgba(7, 18, 32, 0.76);
       --panel-2: rgba(11, 26, 45, 0.78);
       --panel-light: rgba(255, 249, 238, 0.96);
-      --panel-light-2: rgba(255, 246, 229, 0.9);
 
       --text: #f7e8c6;
       --text-soft: rgba(247, 232, 198, 0.78);
@@ -104,7 +103,7 @@
       position: relative;
       width: min(100%, 500px);
       min-height: 100vh;
-      padding: 16px 16px 104px;
+      padding: 14px 16px 104px;
       z-index: 1;
     }
 
@@ -116,7 +115,7 @@
       position: sticky;
       top: 0;
       z-index: 30;
-      padding: 10px 0 14px;
+      padding: 8px 0 12px;
       background: linear-gradient(to bottom, rgba(8, 17, 31, 0.92) 64%, rgba(8, 17, 31, 0));
       backdrop-filter: blur(8px);
     }
@@ -172,9 +171,9 @@
 
     .hero-panel {
       position: relative;
-      height: 300px;
-      margin-top: 2px;
-      margin-bottom: -120px;
+      height: 245px;
+      margin-top: -6px;
+      margin-bottom: -135px;
       overflow: hidden;
       pointer-events: none;
     }
@@ -195,7 +194,7 @@
       transform: translateX(-50%);
       bottom: 10px;
       width: 78%;
-      height: 210px;
+      height: 190px;
       border: 2px solid var(--gold-line);
       border-radius: 40px 40px 28px 28px;
       box-shadow: inset 0 0 24px rgba(228, 201, 141, 0.12);
@@ -205,10 +204,10 @@
       content: "";
       position: absolute;
       left: 50%;
-      top: -72px;
+      top: -66px;
       transform: translateX(-50%);
       width: 55%;
-      height: 92px;
+      height: 84px;
       border: 2px solid var(--gold-line);
       border-bottom: none;
       border-radius: 160px 160px 0 0;
@@ -217,10 +216,10 @@
     .hero-mosque {
       position: absolute;
       left: 50%;
-      bottom: 18px;
+      bottom: 16px;
       transform: translateX(-50%);
       width: 58%;
-      height: 160px;
+      height: 150px;
       opacity: 0.94;
     }
 
@@ -230,7 +229,7 @@
       bottom: 0;
       transform: translateX(-50%);
       width: 76%;
-      height: 58px;
+      height: 52px;
       background: linear-gradient(180deg, rgba(255, 228, 165, 0.88), rgba(255, 228, 165, 0.46));
       border-radius: 10px 10px 0 0;
       filter: drop-shadow(0 0 18px rgba(255, 218, 138, 0.28));
@@ -239,10 +238,10 @@
     .hero-mosque .dome {
       position: absolute;
       left: 50%;
-      bottom: 44px;
+      bottom: 38px;
       transform: translateX(-50%);
       width: 42%;
-      height: 82px;
+      height: 76px;
       background: linear-gradient(180deg, rgba(255, 235, 188, 0.92), rgba(255, 221, 150, 0.52));
       border-radius: 120px 120px 16px 16px;
       filter: drop-shadow(0 0 16px rgba(255, 218, 138, 0.2));
@@ -250,9 +249,9 @@
 
     .hero-mosque .minaret {
       position: absolute;
-      bottom: 38px;
+      bottom: 32px;
       width: 9%;
-      height: 108px;
+      height: 100px;
       background: linear-gradient(180deg, rgba(255, 235, 188, 0.9), rgba(255, 221, 150, 0.48));
       border-radius: 999px 999px 0 0;
     }
@@ -268,11 +267,15 @@
     .hero-mosque .crescent {
       position: absolute;
       left: 50%;
-      bottom: 122px;
+      bottom: 112px;
       transform: translateX(-50%);
       font-size: 28px;
       color: rgba(255, 232, 182, 0.9);
       text-shadow: 0 0 18px rgba(255, 218, 138, 0.24);
+    }
+
+    .mine-screen {
+      gap: 12px;
     }
 
     .category-stack {
@@ -280,7 +283,7 @@
       z-index: 2;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 12px;
     }
 
     .glass-card,
@@ -298,7 +301,7 @@
     .category-card,
     .list-row {
       width: 100%;
-      padding: 20px;
+      padding: 18px;
       border-radius: var(--radius-xl);
       display: flex;
       align-items: center;
@@ -331,9 +334,9 @@
     .category-card-title,
     .list-row-title {
       color: var(--gold);
-      font-size: 20px;
+      font-size: 19px;
       font-weight: 800;
-      margin-bottom: 8px;
+      margin-bottom: 7px;
     }
 
     .category-card-sub {
@@ -388,6 +391,7 @@
       background: radial-gradient(circle at 35% 30%, rgba(58, 212, 122, 0.36), rgba(24, 145, 78, 0.88));
       color: white;
       border: 1px solid rgba(39, 191, 114, 0.46);
+      font-size: 28px;
     }
 
     .section-hero-title {
@@ -596,20 +600,6 @@
       text-align: center;
     }
 
-    .tap-done {
-      min-height: 46px;
-      width: 100%;
-      padding: 0 14px;
-      border-radius: 16px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(180deg, rgba(48, 186, 111, 0.98), rgba(29, 153, 83, 0.98));
-      color: white;
-      font-size: 17px;
-      font-weight: 900;
-      box-shadow: 0 10px 24px rgba(29, 153, 83, 0.28);
-    }
-
     .tap-hint {
       color: rgba(247, 232, 198, 0.7);
       font-size: 13px;
@@ -695,9 +685,9 @@
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
     }
 
-    .stat-grid {
+    .stats-grid-categories {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 12px;
     }
 
@@ -1060,17 +1050,52 @@
         padding: 0 16px;
       }
 
-      .stat-grid {
-        grid-template-columns: 1fr;
+      .hero-panel {
+        height: 220px;
+        margin-bottom: -128px;
       }
 
-      .diary-open-title {
-        font-size: 24px;
+      .hero-arch {
+        width: 84%;
+        height: 172px;
+      }
+
+      .hero-arch::before {
+        width: 58%;
+        top: -58px;
+        height: 74px;
+      }
+
+      .hero-mosque {
+        height: 138px;
+      }
+
+      .hero-mosque .dome {
+        height: 68px;
+        bottom: 34px;
+      }
+
+      .hero-mosque .minaret {
+        height: 92px;
+        bottom: 28px;
+      }
+
+      .category-card,
+      .list-row {
+        padding: 16px;
       }
 
       .category-card-title,
       .list-row-title {
         font-size: 18px;
+      }
+
+      .stats-grid-categories {
+        grid-template-columns: 1fr;
+      }
+
+      .diary-open-title {
+        font-size: 24px;
       }
 
       .category-badge,
@@ -1099,22 +1124,6 @@
 
       #app.with-detail-dock {
         padding-bottom: 298px;
-      }
-
-      .hero-panel {
-        height: 270px;
-        margin-bottom: -104px;
-      }
-
-      .hero-arch {
-        width: 84%;
-        height: 190px;
-      }
-
-      .hero-arch::before {
-        width: 58%;
-        top: -62px;
-        height: 80px;
       }
 
       .tap-complete-title {
@@ -1233,7 +1242,7 @@
       lastTouchEnd = now;
     }, { passive: false });
 
-    const STORAGE_KEY = "zikr-miniapp-state-v21";
+    const STORAGE_KEY = "zikr-miniapp-state-v22";
 
     const CATEGORY_META = {
       morning: { title: "Утренние зикры", icon: "☀" },
@@ -1764,18 +1773,6 @@
       afterRenderTop();
     }
 
-    function getTodayStats() {
-      const zikrs = getAllZikrs();
-      const completed = zikrs.filter((item) => isDone(item.id)).length;
-      const totalRepeats = getDayTotal();
-      return {
-        total: zikrs.length,
-        completed,
-        totalRepeats,
-        percent: zikrs.length ? Math.round((completed / zikrs.length) * 100) : 0
-      };
-    }
-
     function getCategoryStats(category) {
       const items = getAllZikrs(category);
       const completed = items.filter((item) => isDone(item.id)).length;
@@ -1787,7 +1784,8 @@
         completed,
         totalToday,
         allTimeTotal,
-        percent: items.length ? Math.round((completed / items.length) * 100) : 0
+        percent: items.length ? Math.round((completed / items.length) * 100) : 0,
+        allDone: items.length > 0 && completed === items.length
       };
     }
 
@@ -1960,7 +1958,7 @@
 
     function renderMine() {
       return `
-        <section class="screen">
+        <section class="screen mine-screen">
           <div class="hero-panel">
             <div class="hero-glow"></div>
             <div class="hero-arch"></div>
@@ -1986,6 +1984,10 @@
       const meta = CATEGORY_META[category];
       const stats = getCategoryStats(category);
 
+      const badge = stats.allDone
+        ? '<span class="status-badge">✓</span>'
+        : `<span class="category-badge">${stats.total}</span>`;
+
       return `
         <button class="category-card" data-category="${category}">
           <div class="category-card-main">
@@ -1993,7 +1995,7 @@
             <div class="category-card-sub">Сегодня выполнено ${stats.completed}/${stats.total}</div>
             <div class="substat">Всего прочитано: ${stats.allTimeTotal}</div>
           </div>
-          <span class="category-badge">${stats.total}</span>
+          ${badge}
         </button>
       `;
     }
@@ -2127,26 +2129,40 @@
     }
 
     function renderStats() {
-      const todayStats = getTodayStats();
+      const morningStats = getCategoryStats("morning");
+      const eveningStats = getCategoryStats("evening");
+      const dailyStats = getCategoryStats("daily");
+      const streak = getActiveStreak();
 
       return `
         <section class="screen">
-          <div class="stat-grid">
-            <div class="stat-box">
-              <strong>${todayStats.completed}/${todayStats.total}</strong>
-              <span>Выполнено сегодня</span>
+          <div class="stats-grid-categories">
+            <div class="stat-box progress-stat">
+              <strong>${morningStats.percent}%</strong>
+              <span>Утренние зикры</span>
+              <div class="progress-track">
+                <div class="progress-fill-green" style="width:${morningStats.percent}%"></div>
+              </div>
             </div>
 
             <div class="stat-box progress-stat">
-              <strong>${todayStats.percent}%</strong>
-              <span>Прогресс дня</span>
+              <strong>${eveningStats.percent}%</strong>
+              <span>Вечерние зикры</span>
               <div class="progress-track">
-                <div class="progress-fill-green" style="width:${todayStats.percent}%"></div>
+                <div class="progress-fill-green" style="width:${eveningStats.percent}%"></div>
+              </div>
+            </div>
+
+            <div class="stat-box progress-stat">
+              <strong>${dailyStats.percent}%</strong>
+              <span>Повседневные зикры</span>
+              <div class="progress-track">
+                <div class="progress-fill-green" style="width:${dailyStats.percent}%"></div>
               </div>
             </div>
 
             <div class="stat-box">
-              <strong>${getActiveStreak()}</strong>
+              <strong>${streak}</strong>
               <span>Дней подряд</span>
             </div>
           </div>
